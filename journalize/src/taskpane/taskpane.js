@@ -53,7 +53,7 @@
             searchEl.empty();
             $("<p>")
             .addClass("color-red")
-            .text(result.error).appendTo(searchEl);
+            .text(result.error.message).appendTo(searchEl);
             return;
           }
 
