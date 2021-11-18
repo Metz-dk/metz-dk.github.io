@@ -1,3 +1,3 @@
-# journalize.github.io
+# metz-dk.github.io
 
-Homepage on GitHub
+List with public app.
