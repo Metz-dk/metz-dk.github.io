@@ -37,27 +37,44 @@
 
     // search-result submission
     jQuery(document).ready(function(){
-
       // When user press on search button
       $("form[name='search-result'").on('submit', function(e){
         e.preventDefault();
-        let val = $("input[type=radio][name='doc']:checked").val();
-        var requestUrl = 'https://api-dev.metz.dk/journalize/v1/link?val='+val;
-        var searchEl = $(".search-result").empty();
-        $.post(requestUrl, function(data) {
-          confirmLink(searchEl, data);
-        })
-        .fail(function() {
-          $("<p>")
-          .addClass("color-red")
-          .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
-        })
-      });
+
+        var docid = $("input[type=radio][name='doc']:checked").val();
+        var searchEl = $(".search-result");
+
+        var request = GetItem();
+        var envelope = getSoapEnvelope(request);
+        Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
+          searchEl.html("... uploading ...");
+
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(result.value, "text/xml");
+          var values = doc.getElementsByTagName("t:MimeContent");
+          var subject = doc.getElementsByTagName("t:Subject");
+          console.log(subject[0].textContent)
+          
+          var requestUrl = 'https://api-dev.metz.dk/journalize/v1/link';
+
+          $.post(requestUrl, {"docid": docid, "subject": subject[0].textContent, "body": values[0].textContent})
+          .done(function(data) {
+            searchEl.empty();
+            confirmLink(searchEl, data);
+          })
+          .fail(function() {
+            searchEl.empty();
+            $("<p>")
+            .addClass("color-red")
+            .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
+          })
+        });
+     });
     });
   };
 
   function confirmLink(parent, data) {
-    $("<p>").addClass("color-green").text(data.message).appendTo(parent);
+    $("<p>").addClass("color-green").html(data.message).appendTo(parent);
   }
 
   function buildSearchResult(parent, data) {
@@ -96,6 +113,47 @@
     $("<small>").text("keyword: " + data.keyword).appendTo(debug);
     $("<br/>").appendTo(debug);
     $("<small>").text("app: " + data.app).appendTo(debug);
+  }
+
+  // https://gscales.github.io/OWAExportAsEML/MessageRead.js
+  function getSoapEnvelope(request) {
+    // Wrap an Exchange Web Services request in a SOAP envelope.
+    var result =
+
+    '<?xml version="1.0" encoding="utf-8"?>' +
+    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' +
+    '               xmlns:xsd="http://www.w3.org/2001/XMLSchema"' +
+    '               xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"' +
+    '               xmlns:t="http://schemas.microsoft.com/exchange/services/2006/types">' +
+    '  <soap:Header>' +
+    '    <RequestServerVersion Version="Exchange2013" xmlns="http://schemas.microsoft.com/exchange/services/2006/types" soap:mustUnderstand="0" />' +
+    '  </soap:Header>' +
+    '  <soap:Body>' +
+
+    request +
+
+    '  </soap:Body>' +
+    '</soap:Envelope>';
+
+    return result;
+  }
+
+  function GetItem() {
+      var results =
+    '  <GetItem xmlns="http://schemas.microsoft.com/exchange/services/2006/messages">' +
+    '    <ItemShape>' +
+    '      <t:BaseShape>IdOnly</t:BaseShape>' +
+    '      <t:IncludeMimeContent>true</t:IncludeMimeContent>' +
+    '      <AdditionalProperties xmlns="http://schemas.microsoft.com/exchange/services/2006/types">' +
+    '        <FieldURI FieldURI="item:Subject" />' +
+    '      </AdditionalProperties>' +
+    '    </ItemShape>' +
+    '    <ItemIds>' +
+    '      <t:ItemId Id="' + Office.context.mailbox.item.itemId + '" />' +
+    '    </ItemIds>' +
+    '  </GetItem>';
+  
+      return results;
   }
 
 })();
