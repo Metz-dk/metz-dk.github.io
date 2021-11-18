@@ -52,11 +52,24 @@
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
           var ewsId = Office.context.mailbox.item.itemId;
           var token = result.value;
-//          var restId = Office.context.mailbox.convertToRestId(ewsId, Office.MailboxEnums.RestVersion.v2_0);
-//          var getMessageUrl = Office.context.mailbox.restUrl + '/v2.0/me/messages/' + restId;
+
+          //var restId = Office.context.mailbox.convertToRestId(ewsId, Office.MailboxEnums.RestVersion.v2_0);
+          //var getMessageUrl = Office.context.mailbox.restUrl + '/v2.0/me/messages/' + restId;
 
           var getEWSUrl = Office.context.mailbox.ewsUrl;
           console.log("EWS URL: " + getEWSUrl);
+
+          $.ajax({
+            type: "GET",
+            url: getEWSUrl,
+            dataType: 'json',
+            headers: {
+              "Authorization": "Bearer " + token
+            },
+            success: function (result){
+                console.log(result)
+            }
+          });
 
           var xhr = new XMLHttpRequest();
           xhr.open('GET', getEWSUrl);
