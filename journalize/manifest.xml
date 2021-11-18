@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
   <Id>87eb5ee7-8818-4ec3-b5c8-07f621668e9e</Id>
-  <Version>0.9.0.2</Version>
-  <ProviderName>Microsoft Outlook Dev Center</ProviderName>
+  <Version>0.9.0.3</Version>
+  <ProviderName>Metz</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Journalize"/>
   <Description DefaultValue="Adds command buttons to the ribbon in Outlook which allow to journalize emails"/>
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-128.png"/>
+  <IconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://www.metz.dk"/>
   <AppDomains>
     <AppDomain>https://www.metz.dk</AppDomain>
@@ -24,7 +24,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://localhost:3000/taskpane.html"/>
+        <SourceLocation DefaultValue="https://metz-dk.github.io/journalize/src/taskpane/taskpane.html"/>
         <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -76,16 +76,16 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon-16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
-        <bt:Image id="Icon-32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
-        <bt:Image id="Icon-64" DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-        <bt:Image id="Icon-80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
-        <bt:Image id="Icon-128" DefaultValue="https://localhost:3000/assets/icon-128.png"/>
-        <bt:Image id="Icon-org" DefaultValue="https://localhost:3000/assets/logo-filled.png"/>
+        <bt:Image id="Icon-16" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-16.png"/>
+        <bt:Image id="Icon-32" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-32.png"/>
+        <bt:Image id="Icon-64" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
+        <bt:Image id="Icon-80" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-80.png"/>
+        <bt:Image id="Icon-128" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
+        <bt:Image id="Icon-org" DefaultValue="https://metz-dk.github.io/journalize/assets/logo-filled.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+        <bt:Url id="Commands.Url" DefaultValue="https://metz-dk.github.io/journalize/src/commands/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://metz-dk.github.io/journalize/src/taskpane/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Metz"/>
