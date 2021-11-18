@@ -1,3 +1,3 @@
-# met-dk.github.io
+# metz-dk.github.io
 
 List with public app.
