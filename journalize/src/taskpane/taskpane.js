@@ -59,7 +59,7 @@
           console.log("EWS URL: " + getEWSUrl);
 
           var xhr = new XMLHttpRequest();
-          xhr.open('GET', getMessageUrl);
+          xhr.open('GET', getEWSUrl);
           xhr.setRequestHeader("Authorization", "Bearer " + token);
           xhr.onload = function (e) {
               console.log(this.response);
