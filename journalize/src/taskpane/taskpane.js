@@ -49,7 +49,7 @@
         var request = GetItem();
         var envelope = getSoapEnvelope(request);
         Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
-          if (result.status != "failed") {
+          if (result.status === "failed") {
             searchEl.empty();
             $("<p>")
             .addClass("color-red")
