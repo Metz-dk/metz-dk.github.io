@@ -1,3 +1,3 @@
-# journalize.github.io
+# met-dk.github.io
 
-Homepage on GitHub
+List with public app.
