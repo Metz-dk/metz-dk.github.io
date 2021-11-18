@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
+  <Id>87eb5ee7-8818-4ec3-b5c8-07f621668e9e</Id>
+  <Version>0.9.0.2</Version>
+  <ProviderName>Microsoft Outlook Dev Center</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Journalize"/>
+  <Description DefaultValue="Adds command buttons to the ribbon in Outlook which allow to journalize emails"/>
+  <IconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://www.metz.dk"/>
+  <AppDomains>
+    <AppDomain>https://www.metz.dk</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <!-- The FormSettings element is used by older Outlook clients, which only support schema 1.1 and not VersionOverrides -->
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://localhost:3000/taskpane.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteItem</Permissions>
+  <!-- Activation rules only apply to clients that do not support the VersionOverrides element. -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <FunctionFile resid="Commands.Url"/>
+
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgReadGroup">
+                <Label resid="GroupLabel"/>
+
+                <!-- button: Journalize -->
+                <Control xsi:type="Button" id="ActionJournalize">
+                  <Label resid="ActionJournalize.Label"/>
+                  <Supertip>
+                    <Title resid="ActionJournalize.Label"/>
+                    <Description resid="ActionJournalize.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon-16"/>
+                    <bt:Image size="32" resid="Icon-32"/>
+                    <bt:Image size="64" resid="Icon-64"/>
+                    <bt:Image size="80" resid="Icon-80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon-16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
+        <bt:Image id="Icon-32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
+        <bt:Image id="Icon-64" DefaultValue="https://localhost:3000/assets/icon-64.png"/>
+        <bt:Image id="Icon-80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
+        <bt:Image id="Icon-128" DefaultValue="https://localhost:3000/assets/icon-128.png"/>
+        <bt:Image id="Icon-org" DefaultValue="https://localhost:3000/assets/logo-filled.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Metz"/>
+        <bt:String id="ActionJournalize.Label" DefaultValue="Journalize"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="ActionJournalize.Tooltip" DefaultValue="Journalize selected emails."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

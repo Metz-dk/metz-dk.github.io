@@ -1,0 +1,57 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Journalize</title>
+
+    <!-- used for ajax -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js" type="text/javascript"></script>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+    <main id="app-body">
+        <form name="search">
+        <fieldset>
+            <legend>Find documents</legend>
+            <p>Please select an app you want to find documents in:</p>
+            <input type="radio" id="crm" name="app" value="crm" required>
+            <label for="crm">CRM</label>
+            <br/>
+            <input type="radio" id="order" name="app" value="order">
+            <label for="order">Order</label>
+            <br/>
+            <input type="radio" id="offer" name="app" value="offer">
+            <label for="offer">Offer (Tilbud)</label>
+            <br/>
+            <input type="radio" id="product" name="app" value="product">
+            <label for="product">Product</label>
+            <br/><br/>
+            <label for="keyword">Keywords</label>
+            <input type="text" id="keyword" name="keyword" required>
+
+            <button type="submit" class="mt-3">Submit</button>
+        </fieldset>
+        </form>
+
+        <section class="p-2">
+        <h3>Search Result</h3>
+        <form class="search-result" id="search-result" name="search-result">
+        </form>
+        </section>
+    </main>
+</body>
+
+</html>
