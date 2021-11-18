@@ -48,6 +48,23 @@
 
         var request = GetItem();
         var envelope = getSoapEnvelope(request);
+
+        Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
+          debugger;
+          var ewsId = Office.context.mailbox.item.itemId;
+          var token = result.value;
+          var restId = Office.context.mailbox.convertToRestId(ewsId, Office.MailboxEnums.RestVersion.v2_0);
+          var getMessageUrl = Office.context.mailbox.restUrl + '/v2.0/me/messages/' + restId;
+                  
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', getMessageUrl);
+          xhr.setRequestHeader("Authorization", "Bearer " + token);
+          xhr.onload = function (e) {
+              console.log(this.response);
+          }
+          xhr.send();
+        });
+
         Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
           if (result.status === "failed") {
             searchEl.empty();
