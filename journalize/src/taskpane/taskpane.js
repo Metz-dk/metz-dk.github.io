@@ -44,10 +44,18 @@
         var docid = $("input[type=radio][name='doc']:checked").val();
         var searchEl = $(".search-result");
 
+        searchEl.html("... preparing data ...");
+
         var request = GetItem();
         var envelope = getSoapEnvelope(request);
         Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
-          searchEl.html("... uploading ...");
+          if (result.status != "failed") {
+            searchEl.empty();
+            $("<p>")
+            .addClass("color-red")
+            .text(result.error).appendTo(searchEl);
+            return;
+          }
 
           var parser = new DOMParser();
           var doc = parser.parseFromString(result.value, "text/xml");
@@ -57,6 +65,7 @@
           
           var requestUrl = 'https://api-dev.metz.dk/journalize/v1/link';
 
+          searchEl.html("... sending data (please wait) ...");
           $.post(requestUrl, {"docid": docid, "subject": subject[0].textContent, "body": values[0].textContent})
           .done(function(data) {
             searchEl.empty();
