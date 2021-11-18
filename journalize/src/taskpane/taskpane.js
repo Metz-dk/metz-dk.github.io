@@ -49,36 +49,51 @@
         var request = GetItem();
         var envelope = getSoapEnvelope(request);
 
-        Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
-          var ewsId = Office.context.mailbox.item.itemId;
-          var token = result.value;
-
-          //var restId = Office.context.mailbox.convertToRestId(ewsId, Office.MailboxEnums.RestVersion.v2_0);
-          //var getMessageUrl = Office.context.mailbox.restUrl + '/v2.0/me/messages/' + restId;
-
-          var getEWSUrl = Office.context.mailbox.ewsUrl;
-          console.log("EWS URL: " + getEWSUrl);
-
-          $.ajax({
-            type: "GET",
-            url: getEWSUrl,
-            dataType: 'json',
-            headers: {
-              "Authorization": "Bearer " + token
-            },
-            success: function (result){
-                console.log(result)
-            }
-          });
-
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', getEWSUrl);
-          xhr.setRequestHeader("Authorization", "Bearer " + token);
-          xhr.onload = function (e) {
-              console.log(this.response);
-          }
-          xhr.send();
-        });
+        Office.context.mailbox.getCallbackTokenAsync({isRest: true}, function(result){ 
+          if (result.status === "succeeded") { 
+            var accessToken = result.value; 
+        
+            // Use the access token. 
+            getCurrentItem(accessToken); 
+          } else { 
+            // Handle the error. 
+          } 
+        }); 
+        
+        function getItemRestId() { 
+          if (Office.context.mailbox.diagnostics.hostName === 'OutlookIOS') {  
+            // itemId is already REST-formatted. 
+            return Office.context.mailbox.item.itemId; 
+          } else { 
+            // Convert to an item ID for API v2.0. 
+            return Office.context.mailbox.convertToRestId( 
+              Office.context.mailbox.item.itemId, 
+              Office.MailboxEnums.RestVersion.v2_0 
+            ); 
+          } 
+        } 
+        
+        function getCurrentItem(accessToken) { 
+          // Get the item's REST ID.  
+          var itemId = getItemRestId(); 
+        
+          // Construct the REST URL to the current item. 
+          // Details for formatting the URL can be found at 
+          // https://docs.microsoft.com/previous-versions/office/office-365-api/api/version-2.0/mail-rest-operations#get-messages. 
+          var getMessageUrl = Office.context.mailbox.restUrl + 
+            '/v2.0/me/messages/' + itemId;
+        
+          $.ajax({ 
+            url: getMessageUrl, 
+            dataType: 'json',  
+            headers: { 'Authorization': 'Bearer ' + accessToken }  
+          }).done(function(item){ 
+            // Message is passed in `item`. 
+            var subject = item.Subject; 
+          }).fail(function(error){ 
+            // Handle error. 
+          }); 
+        } 
 
         Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
           if (result.status === "failed") {
