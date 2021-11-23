@@ -173,8 +173,8 @@
     '    <ItemIds>' +
     '      <t:ItemId Id="' + itemId + '" />' +
     '    </ItemIds>' +
-    '  </GetItem>';
-
+    '  </GetItem>' +
+    
     '  </soap:Body>' +
     '</soap:Envelope>';
 
