@@ -51,9 +51,9 @@
           var ewsurl = Office.context.mailbox.ewsUrl;
           var itemId = Office.context.mailbox.item.itemId;
 
-          json = {
+          var json = {
             "token": token,
-            "itemid": itemid,
+            "itemid": itemId,
             "ewsurl": ewsurl,
             "docid": docid
           };
