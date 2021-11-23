@@ -55,20 +55,28 @@
           var envelope = getSoapEnvelope(itemId);
 
           var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", ewsurl, true);
           xhttp.withCredentials = true;
-          xhttp.setRequestHeader("Content-type", "text/xml");
+          xhttp.open("POST", ewsurl, true);
+          xhttp.setRequestHeader("Accept", "application/json");
+          xhttp.setRequestHeader("Content-type", "application/xml");
           xhttp.setRequestHeader("Authorization", "Bearer " + token);
+          xhttp.responseType = 'json';
           xhttp.send(envelope);
 
-          xhttp.onreadystatechange = function() {
-            debugger;
-            if (this.readyState == 4 && this.status == 200) {
+          xhttp.onload = function() {
+            if (xhr.status != 200) { // analyze HTTP status of the response
+              sendMemoError();
+            } else { // show the result
               sendMemoSuccess(result);
             }
-            else {
-              sendMemoError();
-            }
+          };
+
+          xhttp.onprogress = function(event) {
+            sendMemoProgress(event);
+          };
+
+          xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+            sendMemoError();
           };
         });
 
@@ -100,6 +108,19 @@
           $("<p>")
           .addClass("color-red")
           .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
+        }
+
+        function sendMemoProgress(event) {
+          if (event.lengthComputable) {
+            var txt = `Received ${event.loaded} of ${event.total} bytes`;
+          } else {
+            var txt = `Received ${event.loaded} bytes`; // no Content-Length
+          }
+
+          searchEl.empty();
+          $("<p>")
+          .addClass("color-red")
+          .text(txt).appendTo(searchEl);
         }
      });
     });
