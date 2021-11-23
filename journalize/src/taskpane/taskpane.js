@@ -50,25 +50,20 @@
           debugger;
 
           var token = result.value;
-          var getEWSUrl = Office.context.mailbox.ewsUrl;
+          var ewsurl = Office.context.mailbox.ewsUrl;
           var itemId = Office.context.mailbox.item.itemId;
           var envelope = getSoapEnvelope(itemId);
 
-          $.ajax({
-            type: "POST",
-            url: getEWSUrl,
-            data: envelope,
-            dataType: 'XML',
-            headers: {
-              "Authorization": "Bearer " + token
-            },
-            success: function (result){
-              sendMemoSuccess(result)
-            },
-            error: function (xhr,ajaxOptions,throwError){
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            debugger;
+            if (this.readyState == 4 && this.status == 200) {
+              sendMemoSuccess(result);
+            }
+            else {
               sendMemoError();
-            },
-          });
+            }
+          };
         });
 
         function sendMemoSuccess(result) {
