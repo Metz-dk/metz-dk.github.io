@@ -54,7 +54,7 @@
 
           var xhttp = new XMLHttpRequest();
           xhttp.open("POST", ewsurl, true);
-          xhttp.setRequestHeader("Content-type", "text/plain");
+          xhttp.setRequestHeader("Content-type", "application/soap+xml");
           xhttp.setRequestHeader("Authorization", "Bearer " + token);
           xhttp.send(envelope);
 
