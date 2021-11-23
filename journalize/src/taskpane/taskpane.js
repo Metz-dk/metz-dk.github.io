@@ -46,6 +46,7 @@
 
         searchEl.html("... preparing data ...");
 
+        /*
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           var token = result.value;
           var item = Office.context.mailbox.item;
@@ -69,6 +70,31 @@
             debugger;
           };
         });
+        */
+
+        Office.context.auth.getAccessTokenAsync(function (result) {
+          if (result.status === "succeeded") {
+              // Use this token to call Web API
+              var ssoToken = result.value;
+          }
+
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", "https://graph.microsoft.com/v1.0/me/", true);
+          xhttp.setRequestHeader("Authorization", "Bearer " + ssoToken);
+          xhttp.send();
+          
+          xhttp.onload = function(result) {
+            debugger;
+          };
+
+          xhttp.onprogress = function(event) {
+            debugger;
+          };
+
+          xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+            debugger;
+          };
+      });
 
         /*
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
