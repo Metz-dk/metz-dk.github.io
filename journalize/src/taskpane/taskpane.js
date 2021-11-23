@@ -46,55 +46,31 @@
 
         searchEl.html("... preparing data ...");
 
-        var request = GetItem();
-        var envelope = getSoapEnvelope(request);
+        Office.context.mailbox.getCallbackTokenAsync(function(result) {
+          debugger;
 
-        Office.context.mailbox.getCallbackTokenAsync({isRest: true}, function(result){ 
-          if (result.status === "succeeded") { 
-            var accessToken = result.value; 
-        
-            // Use the access token. 
-            getCurrentItem(accessToken); 
-          } else { 
-            // Handle the error. 
-          } 
-        }); 
-        
-        function getItemRestId() { 
-          if (Office.context.mailbox.diagnostics.hostName === 'OutlookIOS') {  
-            // itemId is already REST-formatted. 
-            return Office.context.mailbox.item.itemId; 
-          } else { 
-            // Convert to an item ID for API v2.0. 
-            return Office.context.mailbox.convertToRestId( 
-              Office.context.mailbox.item.itemId, 
-              Office.MailboxEnums.RestVersion.v2_0 
-            ); 
-          } 
-        } 
-        
-        function getCurrentItem(accessToken) { 
-          // Get the item's REST ID.  
-          var itemId = getItemRestId(); 
-        
-          // Construct the REST URL to the current item. 
-          // Details for formatting the URL can be found at 
-          // https://docs.microsoft.com/previous-versions/office/office-365-api/api/version-2.0/mail-rest-operations#get-messages. 
-          var getMessageUrl = Office.context.mailbox.restUrl + 
-            '/v2.0/me/messages/' + itemId;
-        
-          $.ajax({ 
-            url: getMessageUrl, 
-            dataType: 'json',  
-            headers: { 'Authorization': 'Bearer ' + accessToken }  
-          }).done(function(item){ 
-            // Message is passed in `item`. 
-            var subject = item.Subject; 
-          }).fail(function(error){ 
-            // Handle error. 
-          }); 
-        } 
+          var token = result.value;
+          var getEWSUrl = Office.context.mailbox.ewsUrl;
+          var itemId = Office.context.mailbox.item.itemId;
+          var envelope = getSoapEnvelope(itemId);
 
+          $.ajax({
+            type: "POST",
+            url: getEWSUrl,
+            data: envelope,
+            dataType: 'XML',
+            headers: {
+              "Authorization": "Bearer " + token
+            },
+            success: function (result){
+                console.log(result)
+            },
+            error: function (xhr,ajaxOptions,throwError){
+              console.error("error :(");            },
+          });
+        });
+
+        /*
         Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
           if (result.status === "failed") {
             searchEl.empty();
@@ -125,6 +101,7 @@
             .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
           })
         });
+        */
      });
     });
   };
@@ -171,8 +148,7 @@
     $("<small>").text("app: " + data.app).appendTo(debug);
   }
 
-  // https://gscales.github.io/OWAExportAsEML/MessageRead.js
-  function getSoapEnvelope(request) {
+  function getSoapEnvelope(itemId) {
     // Wrap an Exchange Web Services request in a SOAP envelope.
     var result =
 
@@ -186,16 +162,6 @@
     '  </soap:Header>' +
     '  <soap:Body>' +
 
-    request +
-
-    '  </soap:Body>' +
-    '</soap:Envelope>';
-
-    return result;
-  }
-
-  function GetItem() {
-      var results =
     '  <GetItem xmlns="http://schemas.microsoft.com/exchange/services/2006/messages">' +
     '    <ItemShape>' +
     '      <t:BaseShape>IdOnly</t:BaseShape>' +
@@ -205,11 +171,14 @@
     '      </AdditionalProperties>' +
     '    </ItemShape>' +
     '    <ItemIds>' +
-    '      <t:ItemId Id="' + Office.context.mailbox.item.itemId + '" />' +
+    '      <t:ItemId Id="' + itemId + '" />' +
     '    </ItemIds>' +
     '  </GetItem>';
-  
-      return results;
+
+    '  </soap:Body>' +
+    '</soap:Envelope>';
+
+    return result;
   }
 
 })();
