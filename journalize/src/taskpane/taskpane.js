@@ -50,77 +50,43 @@
           var token = result.value;
           var ewsurl = Office.context.mailbox.ewsUrl;
           var itemId = Office.context.mailbox.item.itemId;
-          var envelope = getSoapEnvelope(itemId);
+
+          json = {
+            "token": token,
+            "itemid": itemid,
+            "ewsurl": ewsurl,
+            "docid": docid
+          };
 
           var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", ewsurl, true);
-          xhttp.setRequestHeader("Content-type", "application/soap+xml");
-          xhttp.setRequestHeader("Authorization", "Bearer " + token);
-          xhttp.send(envelope);
+          xhttp.open("POST", "https://api-dev.metz.dk/journalize/v1/link", true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(JSON.stringify(json));
 
           xhttp.onload = function() {
             if (xhr.status != 200) { // analyze HTTP status of the response
-              sendMemoError("error happened, try again or contact it@metz.dk");
+              sendMemoError("Error happened, try again or contact it@metz.dk");
             } else { // show the result
-              sendMemoSuccess(result);
+              searchEl.empty();
+              confirmLink(searchEl, data);
             }
-          };
-
-          xhttp.onprogress = function(event) {
-            sendMemoProgress(event);
           };
 
           xhttp.onerror = function() { // only triggers if the request couldn't be made at all
             sendMemoError("Request failed (probably CORS)");
           };
+
         });
-
-        function sendMemoSuccess(result) {
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(result.value, "text/xml");
-          var values = doc.getElementsByTagName("t:MimeContent");
-          var subject = doc.getElementsByTagName("t:Subject");
-          console.log(subject[0].textContent)
-          
-          var requestUrl = 'https://api-dev.metz.dk/journalize/v1/link';
-
-          searchEl.html("... sending data (please wait) ...");
-          $.post(requestUrl, {"docid": docid, "subject": subject[0].textContent, "body": values[0].textContent})
-          .done(function(data) {
-            searchEl.empty();
-            confirmLink(searchEl, data);
-          })
-          .fail(function() {
-            searchEl.empty();
-            $("<p>")
-            .addClass("color-red")
-            .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
-          })
-        }
-
-        function sendMemoError(txt) {
-          searchEl.empty();
-          $("<p>")
-          .addClass("color-red")
-          .text(txt).appendTo(searchEl);
-        }
-
-        function sendMemoProgress(event) {
-          if (event.lengthComputable) {
-            var txt = `Received ${event.loaded} of ${event.total} bytes`;
-          } else {
-            var txt = `Received ${event.loaded} bytes`; // no Content-Length
-          }
-
-          searchEl.empty();
-          $("<p>")
-          .addClass("color-red")
-          .text(txt).appendTo(searchEl);
-        }
-
      });
     });
   };
+
+  function sendMemoError(txt) {
+    searchEl.empty();
+    $("<p>")
+    .addClass("color-red")
+    .text(txt).appendTo(searchEl);
+  }
 
   function confirmLink(parent, data) {
     $("<p>").addClass("color-green").html(data.message).appendTo(parent);
