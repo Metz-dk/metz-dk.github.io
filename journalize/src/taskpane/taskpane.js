@@ -65,7 +65,7 @@
 
           xhttp.onload = function() {
             if (xhr.status != 200) { // analyze HTTP status of the response
-              sendMemoError();
+              sendMemoError("error happened, try again or contact it@metz.dk");
             } else { // show the result
               sendMemoSuccess(result);
             }
@@ -76,7 +76,7 @@
           };
 
           xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-            sendMemoError();
+            sendMemoError("Request failed (probably CORS)");
           };
         });
 
@@ -103,11 +103,11 @@
           })
         }
 
-        function sendMemoError() {
+        function sendMemoError(txt) {
           searchEl.empty();
           $("<p>")
           .addClass("color-red")
-          .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
+          .text(txt).appendTo(searchEl);
         }
 
         function sendMemoProgress(event) {
