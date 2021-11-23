@@ -46,6 +46,26 @@
 
         searchEl.html("... preparing data ...");
 
+        var itemId = Office.context.mailbox.item.itemId;
+        var graphUrl = "https://graph.microsoft.com/v1.0/me/messages/" + itemId + "/$value"
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", graphUrl, true);
+        xhttp.send(envelope);
+
+        xhttp.onload = function(result) {
+          debugger;
+        };
+
+        xhttp.onprogress = function(event) {
+          debugger;
+        };
+
+        xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+          debugger;
+        };
+
+        /*
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           var token = result.value;
           var ewsurl = Office.context.mailbox.ewsUrl;
@@ -117,6 +137,7 @@
           .addClass("color-red")
           .text(txt).appendTo(searchEl);
         }
+        */
      });
     });
   };

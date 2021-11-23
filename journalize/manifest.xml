@@ -9,13 +9,13 @@
   <!-- Begin Basic Settings: Add-in metadata, used for all versions of Office unless override provided. -->
 
   <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
-  <Id>a18de30c-141b-4967-90a6-793df473fcb0</Id>
+  <Id>xx18de30c-141b-4967-90a6-793df473fcb0</Id>
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>0.9.8</Version>
+  <Version>0.8.1</Version>
   <ProviderName>Metz</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
    <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-  <DisplayName DefaultValue="Journalize (0.9.8)"/>
+  <DisplayName DefaultValue="Journalize (0.8.1)"/>
   <Description DefaultValue="Adds command buttons to the ribbon in Outlook which allow to journalize emails"/>
   <IconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
