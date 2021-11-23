@@ -47,20 +47,15 @@
         searchEl.html("... preparing data ...");
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
-          debugger;
-
           var token = result.value;
           var ewsurl = Office.context.mailbox.ewsUrl;
           var itemId = Office.context.mailbox.item.itemId;
           var envelope = getSoapEnvelope(itemId);
 
           var xhttp = new XMLHttpRequest();
-          xhttp.withCredentials = true;
           xhttp.open("POST", ewsurl, true);
-          xhttp.setRequestHeader("Accept", "application/json");
-          xhttp.setRequestHeader("Content-type", "application/xml");
+          xhttp.setRequestHeader("Content-type", "application/soap+xml");
           xhttp.setRequestHeader("Authorization", "Bearer " + token);
-          xhttp.responseType = 'json';
           xhttp.send(envelope);
 
           xhttp.onload = function() {
