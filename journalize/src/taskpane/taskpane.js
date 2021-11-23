@@ -51,7 +51,7 @@
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", graphUrl, true);
-        xhttp.send(envelope);
+        xhttp.send();
 
         xhttp.onload = function(result) {
           debugger;
