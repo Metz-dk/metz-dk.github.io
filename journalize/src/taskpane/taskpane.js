@@ -64,7 +64,7 @@
           xhttp.send(JSON.stringify(json));
 
           xhttp.onload = function() {
-            if (xhr.status != 200) { // analyze HTTP status of the response
+            if (xhttp.status != 200) { // analyze HTTP status of the response
               sendMemoError("Error happened, try again or contact it@metz.dk");
             } else { // show the result
               searchEl.empty();
