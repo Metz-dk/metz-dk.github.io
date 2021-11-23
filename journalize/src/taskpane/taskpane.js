@@ -63,46 +63,15 @@
               "Authorization": "Bearer " + token
             },
             success: function (result){
-              var parser = new DOMParser();
-              var doc = parser.parseFromString(result.value, "text/xml");
-              var values = doc.getElementsByTagName("t:MimeContent");
-              var subject = doc.getElementsByTagName("t:Subject");
-              console.log(subject[0].textContent)
-              
-              var requestUrl = 'https://api-dev.metz.dk/journalize/v1/link';
-    
-              searchEl.html("... sending data (please wait) ...");
-              $.post(requestUrl, {"docid": docid, "subject": subject[0].textContent, "body": values[0].textContent})
-              .done(function(data) {
-                searchEl.empty();
-                confirmLink(searchEl, data);
-              })
-              .fail(function() {
-                searchEl.empty();
-                $("<p>")
-                .addClass("color-red")
-                .text("error happened when journalazing email, try again or contact it@metz.dk").appendTo(searchEl);
-              })
+              sendMemoSuccess(result)
             },
             error: function (xhr,ajaxOptions,throwError){
-              searchEl.empty();
-              $("<p>")
-              .addClass("color-red")
-              .text("error happened during search, try again or contact it@metz.dk").appendTo(searchEl);
-              return;
+              sendMemoError();
+            },
           });
         });
 
-        /*
-        Office.context.mailbox.makeEwsRequestAsync(envelope, function(result){
-          if (result.status === "failed") {
-            searchEl.empty();
-            $("<p>")
-            .addClass("color-red")
-            .text(result.error.message).appendTo(searchEl);
-            return;
-          }
-
+        function sendMemoSuccess(result) {
           var parser = new DOMParser();
           var doc = parser.parseFromString(result.value, "text/xml");
           var values = doc.getElementsByTagName("t:MimeContent");
@@ -123,8 +92,14 @@
             .addClass("color-red")
             .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
           })
-        });
-        */
+        }
+
+        function sendMemoError() {
+          searchEl.empty();
+          $("<p>")
+          .addClass("color-red")
+          .text(result.error.message).appendTo(searchEl);
+        }
      });
     });
   };
@@ -197,7 +172,6 @@
     '      <t:ItemId Id="' + itemId + '" />' +
     '    </ItemIds>' +
     '  </GetItem>' +
-
     '  </soap:Body>' +
     '</soap:Envelope>';
 
