@@ -24,6 +24,8 @@
   <AppDomains>
     <AppDomain>https://metz-dk.github.io</AppDomain>
     <AppDomain>https://metz-dk.github.io/</AppDomain>
+    <AppDomain>http://metz-dk.github.io</AppDomain>
+    <AppDomain>http://metz-dk.github.io/</AppDomain>
   </AppDomains>
   
   <!--End Basic Settings. -->
