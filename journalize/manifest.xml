@@ -11,7 +11,7 @@
   <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you change this id to a new GUID. -->
   <Id>a18de30c-141b-4967-90a6-793df473fcb0</Id>
   <!--Version. Updates from the store only get triggered if there is a version change. -->
-  <Version>0.9.1</Version>
+  <Version>0.9.2</Version>
   <ProviderName>Metz</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
    <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
@@ -22,6 +22,7 @@
   <SupportUrl DefaultValue="https://www.metz.dk"/>
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
+    <AppDomain>https://github.io</AppDomain>
     <AppDomain>https://metz-dk.github.io</AppDomain>
   </AppDomains>
   
