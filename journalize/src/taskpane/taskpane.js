@@ -55,6 +55,11 @@
           var envelope = getSoapEnvelope(itemId);
 
           var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", ewsurl, true);
+          xhttp.setRequestHeader("Content-type", "text/xml");
+          xhttp.setRequestHeader("Authorization", "Bearer " + token);
+          xhttp.send(envelope);
+
           xhttp.onreadystatechange = function() {
             debugger;
             if (this.readyState == 4 && this.status == 200) {
