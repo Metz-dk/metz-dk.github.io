@@ -98,7 +98,7 @@
           searchEl.empty();
           $("<p>")
           .addClass("color-red")
-          .text(result.error.message).appendTo(searchEl);
+          .text("error happened, try again or contact it@metz.dk").appendTo(searchEl);
         }
      });
     });
@@ -147,7 +147,6 @@
   }
 
   function getSoapEnvelope(itemId) {
-    // Wrap an Exchange Web Services request in a SOAP envelope.
     var result =
 
     '<?xml version="1.0" encoding="utf-8"?>' +
