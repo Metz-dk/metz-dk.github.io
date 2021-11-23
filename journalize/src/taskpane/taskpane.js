@@ -65,6 +65,30 @@
           debugger;
         };
 
+
+        Office.context.mailbox.getCallbackTokenAsync(function(result) {
+          var token = result.value;
+          var item = Office.context.mailbox.item;
+          var itemId = item.itemId;
+
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("GET", graphUrl, true);
+          xhttp.setRequestHeader("Authorization", "Bearer " + token);
+          xhttp.send();
+
+          xhttp.onload = function(result) {
+            debugger;
+          };
+
+          xhttp.onprogress = function(event) {
+            debugger;
+          };
+
+          xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+            debugger;
+          };
+        });
+
         /*
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           var token = result.value;
