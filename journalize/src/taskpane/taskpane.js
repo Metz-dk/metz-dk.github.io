@@ -17,18 +17,29 @@
       $("form[name='search'").on('submit', function(e){
         e.preventDefault();
 
-        let app = $("input[type=radio][name='app']:checked").val();
-        let keyword = $("#keyword").val();
+        let app = document.querySelector('inputinput[name="app"]:checked').value;
+        let keyword = document.getElementById("keyword").value;
         var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?app=' + app + '&keyword=' + keyword;
         var searchEl = $(".search-result").empty();
-        $.get(requestUrl, function(data) {
-          buildSearchResult(searchEl, data);
-        })
-        .fail(function() {
+
+        $("<p>").addClass("color-blue").text("please wait...").appendTo(searchEl);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", requestUrl, true);
+        xhttp.onload = function() {
+          if (xhttp.status != 200) { // analyze HTTP status of the response
+            sendMemoError("Error happened, try again or contact it@metz.dk");
+          } else { // show the result
+            buildSearchResult(searchEl, this.result);
+          }
+        };
+
+        xhttp.onerror = function() { // only triggers if the request couldn't be made at all
           $("<p>")
           .addClass("color-red")
-          .text("error happened during search, try again or contact it@metz.dk").appendTo(searchEl);
-        })
+          .text("Error happened, try again or contact it@metz.dk").appendTo(searchEl);
+        };
+
       });
     });
 
