@@ -32,7 +32,7 @@
           if (xhttp.status != 200) { // analyze HTTP status of the response
             sendMemoError("Error happened, try again or contact it@metz.dk");
           } else { // show the result
-            buildSearchResult(searchEl, this.responseText);
+            buildSearchResult(searchEl, JSON.parse(this.responseText));
           }
         };
 
