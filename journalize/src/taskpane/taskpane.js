@@ -42,6 +42,43 @@
           .text("Error happened, try again or contact it@metz.dk").appendTo(searchEl);
         };
 
+        function buildSearchResult(parent, data) {
+          let app = data.app;
+          let docs = data.docs;
+      
+          if (docs.length > 0) {
+            $("<p>").addClass("color-green").text(`${docs.length} document(s) displayed (total: ${data.total})`).appendTo(parent);
+            let list = $("<ul>").addClass("my-3").appendTo(parent);
+            for (var i = 0; i < docs.length; i++) {
+              let li = $("<li>").appendTo(list);
+              $("<input>")
+              .attr('type', 'radio')
+              .attr('name', 'doc')
+              .attr('id', 'doc' + docs[i].unid)
+              .attr('required', 'required')
+              .val(`${app}|${docs[i].unid}`)
+              .appendTo(li);
+              $("<label>")
+              .attr('for', 'doc' + docs[i].unid)
+              .text(docs[i].title)
+              .appendTo(li);
+            }
+          }
+          else {
+            $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
+          }
+      
+          $("<button>")
+          .attr("type", "submit")
+          .text("Journalize").appendTo(parent);
+      
+          let debug = $("<div>").addClass("mt-2").appendTo(parent);
+          $("<small>").text("server: " + data.server).appendTo(debug);
+          $("<br/>").appendTo(debug);
+          $("<small>").text("keyword: " + data.keyword).appendTo(debug);
+          $("<br/>").appendTo(debug);
+          $("<small>").text("app: " + data.app).appendTo(debug);
+        }
       });
     });
 
@@ -101,43 +138,5 @@
      });
     });
   };
-
-  function buildSearchResult(parent, data) {
-    let app = data.app;
-    let docs = data.docs;
-
-    if (docs.length > 0) {
-      $("<p>").addClass("color-green").text(docs.length+" document(s) found: ").appendTo(parent);
-      let list = $("<ul>").addClass("my-3").appendTo(parent);
-      for (var i = 0; i < docs.length; i++) {
-        let li = $("<li>").appendTo(list);
-        $("<input>")
-        .attr('type', 'radio')
-        .attr('name', 'doc')
-        .attr('id', 'doc' + docs[i].unid)
-        .attr('required', 'required')
-        .val(`${app}|${docs[i].unid}`)
-        .appendTo(li);
-        $("<label>")
-        .attr('for', 'doc' + docs[i].unid)
-        .text(docs[i].form)
-        .appendTo(li);
-      }
-    }
-    else {
-      $("<p>").addClass("color-green").text("no documents found").appendTo(parent);
-    }
-
-    $("<button>")
-    .attr("type", "submit")
-    .text("Journalize").appendTo(parent);
-
-    let debug = $("<div>").addClass("mt-2").appendTo(parent);
-    $("<small>").text("server: " + data.server).appendTo(debug);
-    $("<br/>").appendTo(debug);
-    $("<small>").text("keyword: " + data.keyword).appendTo(debug);
-    $("<br/>").appendTo(debug);
-    $("<small>").text("app: " + data.app).appendTo(debug);
-  }
 
 })();
