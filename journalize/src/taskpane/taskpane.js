@@ -26,6 +26,8 @@
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
+        xhttp.send();
+        
         xhttp.onload = function() {
           if (xhttp.status != 200) { // analyze HTTP status of the response
             sendMemoError("Error happened, try again or contact it@metz.dk");
