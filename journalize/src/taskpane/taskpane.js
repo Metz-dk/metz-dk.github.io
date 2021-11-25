@@ -17,7 +17,7 @@
       $("form[name='search'").on('submit', function(e){
         e.preventDefault();
 
-        let app = document.querySelector('inputinput[name="app"]:checked').value;
+        let app = document.querySelector('input[name="app"]:checked').value;
         let keyword = document.getElementById("keyword").value;
         var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?app=' + app + '&keyword=' + keyword;
         var searchEl = $(".search-result").empty();
