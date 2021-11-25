@@ -89,6 +89,7 @@
         e.preventDefault();
 
         var docid = $("input[type=radio][name='doc']:checked").val();
+        var app = docid.split('|')[0];
         var searchEl = $(".search-result");
 
         searchEl.html("... preparing data ...");
@@ -105,8 +106,9 @@
             "docid": docid
           };
 
+          var endpoint = "https://api-dev.metz.dk/journalize/v1/" + app;
           var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", "https://api-dev.metz.dk/journalize/v1/link", true);
+          xhttp.open("POST", endpoint, true);
           xhttp.setRequestHeader("Content-type", "application/json");
           xhttp.send(JSON.stringify(json));
 
