@@ -27,8 +27,9 @@
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
         xhttp.send();
-
+        
         xhttp.onload = function() {
+          searchEl.empty();
           if (xhttp.status != 200) { // analyze HTTP status of the response
             sendMemoError("Error happened, try again or contact it@metz.dk");
           } else { // show the result
@@ -37,6 +38,7 @@
         };
 
         xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+          searchEl.empty();
           $("<p>")
           .addClass("color-red")
           .text("Error happened, try again or contact it@metz.dk").appendTo(searchEl);
