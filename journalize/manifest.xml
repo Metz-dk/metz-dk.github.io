@@ -22,8 +22,8 @@
   <SupportUrl DefaultValue="https://www.metz.dk"/>
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
-    <AppDomain>https://outlook.office365.com</AppDomain>
     <AppDomain>https://metz-dk.github.io</AppDomain>
+    <AppDomain>https://api-dev.metz.dk</AppDomain>
   </AppDomains>
   
   <!--End Basic Settings. -->
