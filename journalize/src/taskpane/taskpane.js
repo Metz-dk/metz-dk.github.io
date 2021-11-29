@@ -120,8 +120,8 @@
             }
             xhr.send();
           }
-        }
-        
+        });
+
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           var token = result.value;
           var ewsurl = Office.context.mailbox.ewsUrl;
