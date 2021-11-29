@@ -96,32 +96,32 @@
 
         searchEl.html("... sending data (please wait) ...");
 
-        // TEST: GRAPH
-        Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
+        Office.context.mailbox.getCallbackTokenAsync({isRest: true}, function(result){
           if (result.status === "succeeded") {
-              var accessToken = result.value;
-              getCurrentItem(accessToken);
-          } else {
-              // Handle the error
+            let token = result.value;
+            var ewsItemId = Office.context.mailbox.item.itemId;
+        
+            const itemId = Office.context.mailbox.convertToRestId(
+                ewsItemId,
+                Office.MailboxEnums.RestVersion.v2_0);
+        
+            // Request the message's attachment info
+            var getMessageUrl = Office.context.mailbox.restUrl +
+                '/v2.0/me/messages/' + itemId + '/$value';
+        
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', getMessageUrl);
+            xhr.setRequestHeader("Authorization", "Bearer " + token);
+            xhr.onload = function (e) {
+               console.log(this.response);
+            }
+            xhr.onerror = function (e) {
+               console.log("error occurred");
+            }
+            xhr.send();
           }
-        });
-
-        function getCurrentItem(accessToken) {
-          var getURL = "https://graph.microsoft.com/v1.0/me/";
-          $.ajax({
-              type: "GET",
-              contentType: "application/json; charset=utf-8",
-              url: getURL,
-              headers: { 'Authorization': 'Bearer ' + accessToken }
-          }).done(function (item) {
-              // Message is passed in `item`
-              debugger;
-            console.log(item);
-          }).fail(function (error) {
-            debugger;
-          });
         }
-
+        
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           var token = result.value;
           var ewsurl = Office.context.mailbox.ewsUrl;
