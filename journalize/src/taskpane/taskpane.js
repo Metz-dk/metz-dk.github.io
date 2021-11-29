@@ -107,44 +107,19 @@
         });
 
         function getCurrentItem(accessToken) {
-          // Get the item's REST ID
-          var itemId = getItemRestId();
-      
-          // Construct the REST URL to the current item
-          // Details for formatting the URL can be found at 
-          // https://msdn.microsoft.com/office/office365/APi/mail-rest-operations#get-a-message-rest
-         // var getMessageUrl = Office.context.mailbox.restUrl +
-         //     '/v2.0/me/messages/' + itemId;'
-           var PostURL = "https://outlook.office.com/api/beta/me/GetMailTips";
-           var mtipRequest = "{ \"EmailAddresses\": [ \"gscales@datarumble.com\" ],\"MailTipsOptions\": \"automaticReplies, mailboxFullStatus\"}";
-          //var getMessageUrl = "https://graph.microsoft.com/beta/me/messages/" + itemId;
+          var getURL = "https://graph.microsoft.com/v1.0/me/";
           $.ajax({
-              type: "POST",
+              type: "GET",
               contentType: "application/json; charset=utf-8",
-              url: PostURL,
-              data: mtipRequest,
-              dataType: 'json',
+              url: getURL,
               headers: { 'Authorization': 'Bearer ' + accessToken }
           }).done(function (item) {
               // Message is passed in `item`
-              var subject = item.value[0].EmailAddress.Address;
-              $('#ServerName').text("Message Subject : " + subject);
+              debugger;
+            console.log(item);
           }).fail(function (error) {
-              // Handle error
+            debugger;
           });
-        }
-        
-        function getItemRestId() {
-            if (Office.context.mailbox.diagnostics.hostName === 'OutlookIOS') {
-                // itemId is already REST-formatted
-                return Office.context.mailbox.item.itemId;
-            } else {
-                // Convert to an item ID for API v2.0
-                return Office.context.mailbox.convertToRestId(
-                    Office.context.mailbox.item.itemId,
-                    Office.MailboxEnums.RestVersion.v2_0
-                );
-            }
         }
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
