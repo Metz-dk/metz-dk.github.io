@@ -96,36 +96,19 @@
 
         searchEl.html("... sending data (please wait) ...");
 
-        Office.context.mailbox.getCallbackTokenAsync({isRest: true}, function(result){
-          if (result.status === "succeeded") {
-            let token = result.value;
-            var ewsItemId = Office.context.mailbox.item.itemId;
-        
-            const itemId = Office.context.mailbox.convertToRestId(
-                ewsItemId,
-                Office.MailboxEnums.RestVersion.v2_0);
-        
-            // Request the message's attachment info
-            var getMessageUrl = Office.context.mailbox.restUrl +
-                '/v2.0/me/messages/' + itemId + '/$value';
-        
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', getMessageUrl);
-            xhr.setRequestHeader("Authorization", "Bearer " + token);
-            xhr.onload = function (e) {
-               console.log(this.response);
-            }
-            xhr.onerror = function (e) {
-               console.log("error occurred");
-            }
-            xhr.send();
-          }
-        });
-
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
+          if (result.status !== "succeeded") {
+            sendMemoError("Error happened (accesss token was not issued), try again or contact it@metz.dk");
+            return;
+          }
+
           var token = result.value;
-          var ewsurl = Office.context.mailbox.ewsUrl;
-          var itemId = Office.context.mailbox.item.itemId;
+          var ewsurl = Office.context.mailbox.restUrl;
+          var ewsItemId = Office.context.mailbox.item.itemId;
+        
+          const itemId = Office.context.mailbox.convertToRestId(
+              ewsItemId,
+              Office.MailboxEnums.RestVersion.v2_0);
 
           var json = {
             "token": token,
