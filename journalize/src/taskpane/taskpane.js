@@ -70,10 +70,6 @@
             $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
           }
 
-          var journalizeForceEl = $("<div>", {class: "my-3"}).appendTo(parent);
-          $("<input>", {type: 'checkbox', id: 'journalize-force', value: '1'}).appendTo(journalizeForceEl);
-          $("<label>", {for: 'journalize-force', text: 'Journalize same memo'}).appendTo(journalizeForceEl);
-
           $("<button>")
           .attr("type", "submit")
           .text("Journalize").appendTo(parent);
@@ -95,7 +91,6 @@
         e.preventDefault();
 
         var docid = $("input[type=radio][name='doc']:checked").val();
-        var force = document.getElementById('journalize-force').checked;
         var app = docid.split('|')[0];
         var searchEl = $(".search-result");
 
@@ -119,8 +114,7 @@
             "token": token,
             "itemid": itemId,
             "ewsurl": ewsurl,
-            "docid": docid,
-            "force": force
+            "docid": docid
           };
 
           var endpoint = "https://api-dev.metz.dk/journalize/v1/" + app;
