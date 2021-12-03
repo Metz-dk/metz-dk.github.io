@@ -70,7 +70,7 @@
             $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
           }
 
-          var journalizeForceEl = $("<div>", {class: "my-1"}).appendTo(parent);
+          var journalizeForceEl = $("<div>", {class: "my-3"}).appendTo(parent);
           $("<input>", {type: 'checkbox', id: 'journalize-force', value: '1'}).appendTo(journalizeForceEl);
           $("<label>", {for: 'journalize-force', text: 'Journalize same memo'}).appendTo(journalizeForceEl);
 
