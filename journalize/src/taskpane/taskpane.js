@@ -69,7 +69,10 @@
           else {
             $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
           }
-      
+
+          $("<input>", {type: 'checkbox', id: 'journalize-force', value: '1'}).appendTo(parent);
+          $("<label>", {for: 'journalize-force', text: 'Journalize same memo'}).appendTo(parent);
+
           $("<button>")
           .attr("type", "submit")
           .text("Journalize").appendTo(parent);
@@ -91,6 +94,7 @@
         e.preventDefault();
 
         var docid = $("input[type=radio][name='doc']:checked").val();
+        var force = document.getElementById('journalize-force').checked;
         var app = docid.split('|')[0];
         var searchEl = $(".search-result");
 
@@ -105,7 +109,7 @@
           var token = result.value;
           var ewsurl = Office.context.mailbox.restUrl;
           var ewsItemId = Office.context.mailbox.item.itemId;
-        
+          
           const itemId = Office.context.mailbox.convertToRestId(
               ewsItemId,
               Office.MailboxEnums.RestVersion.v2_0);
@@ -114,7 +118,8 @@
             "token": token,
             "itemid": itemId,
             "ewsurl": ewsurl,
-            "docid": docid
+            "docid": docid,
+            "force": force
           };
 
           var endpoint = "https://api-dev.metz.dk/journalize/v1/" + app;
