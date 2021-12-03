@@ -19,7 +19,7 @@
 
         let app = document.querySelector('input[name="app"]:checked').value;
         let keyword = document.getElementById("keyword").value;
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?app=' + app + '&keyword=' + keyword;
+        var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?app=' + app + '&keyword=' + keyword;
         var searchEl = $(".search-result").empty();
 
         $("<p>").addClass("color-blue").text("please wait...").appendTo(searchEl);
@@ -117,7 +117,7 @@
             "docid": docid
           };
 
-          var endpoint = "https://api.metz.dk/journalize/v1/" + app;
+          var endpoint = "https://api-dev.metz.dk/journalize/v1/" + app;
           var xhttp = new XMLHttpRequest();
           xhttp.open("POST", endpoint, true);
           xhttp.setRequestHeader("Content-type", "application/json");
