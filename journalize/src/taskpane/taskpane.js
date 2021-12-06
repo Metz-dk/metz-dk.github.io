@@ -135,21 +135,22 @@
           xhttp.onerror = function() { // only triggers if the request couldn't be made at all
             sendMemoError("Request failed");
           };
-
-          function sendMemoError(txt) {
-            searchEl.empty();
-            $("<p>")
-            .addClass("color-red")
-            .text(txt).appendTo(searchEl);
-          }
         
           function confirmLink(parent, data) {
             $("<p>").addClass("color-green").html(data.message).appendTo(parent);
           }
         
         });
-     });
+      });
     });
+
+    function sendMemoError(txt) {
+      searchEl.empty();
+      $("<p>")
+      .addClass("color-red")
+      .text(txt).appendTo(searchEl);
+    }
+
   };
 
 })();
