@@ -31,17 +31,14 @@
         xhttp.onload = function() {
           searchEl.empty();
           if (xhttp.status != 200) { // analyze HTTP status of the response
-            sendMemoError("Error happened, try again or contact it@metz.dk");
+            printError(searchEl, "Error happened, try again or contact it@metz.dk");
           } else { // show the result
             buildSearchResult(searchEl, JSON.parse(this.responseText));
           }
         };
 
         xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-          searchEl.empty();
-          $("<p>")
-          .addClass("color-red")
-          .text("Error happened, try again or contact it@metz.dk").appendTo(searchEl);
+          printError(searchEl, "Error happened, try again or contact it@metz.dk");
         };
 
         function buildSearchResult(parent, data) {
@@ -81,14 +78,6 @@
           $("<br/>").appendTo(debug);
           $("<small>").text("action: " + data.action).appendTo(debug);
         }
-
-        function sendMemoError(txt) {
-          searchEl.empty();
-          $("<p>")
-          .addClass("color-red")
-          .text(txt).appendTo(searchEl);
-        }
-    
       });
     });
 
@@ -106,7 +95,7 @@
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           if (result.status !== "succeeded") {
-            sendMemoError("Error happened (accesss token was not issued), try again or contact it@metz.dk");
+            printError(searchEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
             return;
           }
 
@@ -141,23 +130,23 @@
           };
 
           xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-            sendMemoError("Request failed");
+            printError(searchEl, "Request failed");
           };
         
           function confirmLink(parent, data) {
             $("<p>").addClass("color-green").html(data.message).appendTo(parent);
-          }
-     
-          function sendMemoError(txt) {
-            searchEl.empty();
-            $("<p>")
-            .addClass("color-red")
-            .text(txt).appendTo(searchEl);
-          }
-      
+          }      
         });
       });
     });
+
+    function printError(el, txt) {
+      el.empty();
+      $("<p>")
+      .addClass("color-red")
+      .text(txt).appendTo(searchEl);
+    }
+
   };
 
 })();
