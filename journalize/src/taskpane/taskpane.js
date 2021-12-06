@@ -45,7 +45,7 @@
         };
 
         function buildSearchResult(parent, data) {
-          let app = data.app;
+          let action = data.action;
           let docs = data.docs;
       
           if (docs.length > 0) {
@@ -56,12 +56,12 @@
               $("<input>")
               .attr('type', 'radio')
               .attr('name', 'doc')
-              .attr('id', 'doc' + docs[i].unid)
+              .attr('id', `doc${docs[i].unid}`)
               .attr('required', 'required')
-              .val(`${app}|${docs[i].unid}`)
+              .val(`${action}|${docs[i].unid}`)
               .appendTo(li);
               $("<label>")
-              .attr('for', 'doc' + docs[i].unid)
+              .attr('for', `doc${docs[i].unid}`)
               .text(docs[i].title)
               .appendTo(li);
             }
@@ -79,7 +79,7 @@
           $("<br/>").appendTo(debug);
           $("<small>").text("keyword: " + data.keyword).appendTo(debug);
           $("<br/>").appendTo(debug);
-          $("<small>").text("app: " + data.app).appendTo(debug);
+          $("<small>").text("action: " + data.action).appendTo(debug);
         }
       });
     });
@@ -90,7 +90,7 @@
       $("form[name='search-result'").on('submit', function(e){
         e.preventDefault();
 
-        var docid = $("input[type=select][name='doc']:checked").val();
+        var docid = $("input[type=radio][name='doc']:checked").val();
         var app = docid.split('|')[0];
         var searchEl = $(".search-result");
 

@@ -28,14 +28,18 @@
             <legend>Find documents</legend>
             <p>Please select an app you want to find documents in:</p>
 
-            <label for="action">Action:</label>
-            <select name="action" id="action" class="mb-3">
+            <div class="mb-3">
+                <label for="action">Action:</label>
+                <select name="action" id="action">
                 <option value="order">Order</option>
                 <option value="product">Produkter</option>
-            </select>
+                </select>
+            </div>
 
-            <label for="keyword">Keywords</label>
-            <input type="text" id="keyword" name="keyword" required>
+            <div>
+                <label for="keyword">Keywords</label>
+                <input type="text" id="keyword" name="keyword" required>
+            </div>
 
             <button type="submit" class="mt-3">Submit</button>
         </fieldset>
