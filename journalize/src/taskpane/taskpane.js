@@ -17,9 +17,9 @@
       $("form[name='search'").on('submit', function(e){
         e.preventDefault();
 
-        let app = document.querySelector('input[name="app"]:checked').value;
+        let action = document.querySelector('#action').value;
         let keyword = document.getElementById("keyword").value;
-        var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?app=' + app + '&keyword=' + keyword;
+        var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
         var searchEl = $(".search-result").empty();
 
         $("<p>").addClass("color-blue").text("please wait...").appendTo(searchEl);
@@ -90,7 +90,7 @@
       $("form[name='search-result'").on('submit', function(e){
         e.preventDefault();
 
-        var docid = $("input[type=radio][name='doc']:checked").val();
+        var docid = $("input[type=select][name='doc']:checked").val();
         var app = docid.split('|')[0];
         var searchEl = $(".search-result");
 

@@ -27,18 +27,13 @@
         <fieldset>
             <legend>Find documents</legend>
             <p>Please select an app you want to find documents in:</p>
-            <input type="radio" id="crm" name="app" value="crm" required>
-            <label for="crm">CRM</label>
-            <br/>
-            <input type="radio" id="order" name="app" value="order">
-            <label for="order">Order</label>
-            <br/>
-            <input type="radio" id="offer" name="app" value="offer">
-            <label for="offer">Offer (Tilbud)</label>
-            <br/>
-            <input type="radio" id="product" name="app" value="product">
-            <label for="product">Product</label>
-            <br/><br/>
+
+            <label for="action">Action:</label>
+            <select name="action" id="action" class="mb-3">
+                <option value="order">Order</option>
+                <option value="product">Produkter</option>
+            </select>
+
             <label for="keyword">Keywords</label>
             <input type="text" id="keyword" name="keyword" required>
 
