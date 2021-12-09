@@ -137,7 +137,7 @@
           function confirmLink(parent, data) {
             var app = $("#app-journalize #action option:selected").text();
             parent.empty();
-            parent.append(`<p class="color-green">Mail journalized succesfully"</p>`);
+            parent.append(`<p class="color-green">Mail journalized succesfully</p>`);
             parent.append(`<p><a href="${data.memo}" target="_blank">View Notes mail</a></p>`);
             parent.append(`<p><a href="${data.doc}" target="_blank">View '${app}' document</a></p>`);
           }
