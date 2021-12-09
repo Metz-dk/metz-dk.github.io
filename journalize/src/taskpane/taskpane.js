@@ -135,7 +135,7 @@
           };
         
           function confirmLink(parent, data) {
-            var app = $(`#app-body #action option[value='${data.action}']`).text();
+            var app = $(`#app-journalize #action option[value=${data.action}]`).text();
             parent.empty();
             parent.append(`<p class="color-green">Mail journalized succesfully"</p>`);
             parent.append(`<p><a href="${data.memo}" target="_blank">View Notes mail</a></p>`);
