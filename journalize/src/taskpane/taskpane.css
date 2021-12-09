@@ -26,13 +26,14 @@ textarea {
     box-sizing: border-box;
 }
 
-ul li {
-    margin-top: 0.25rem;
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-input,
-select {
-    height: 1.5rem;
+ul li {
+    margin-top: 0.25rem;
 }
 
 .w-100 {
@@ -93,8 +94,6 @@ select {
     color: red;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
+form[name=search] input, form[name=search] select {
+    height: 1.25rem;
+}
