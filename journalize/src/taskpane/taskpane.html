@@ -24,29 +24,22 @@
 
     <main id="app-body">
         <form name="search">
-        <fieldset>
-            <legend>Find documents</legend>
-            <p>Please select an app you want to find documents in:</p>
+        <fieldset class="p-3">
+            <legend>Application</legend>
 
-            <div class="mb-3">
-                <label for="action">Action:</label>
-                <select name="action" id="action">
-                <option value="order">OD: Ordrer</option>
-                <option value="product">PD: Produkt</option>
-                <option value="offer">TD: Produkt</option>
-                <option value="valgshops">Valgshops</option>
-                <option value="weborder">Webordrer</option>
-                <option value="inquiries">Forespørgsel</option>
-                <option value="crm-slgm">CRM: Salgsmulighed</option>
-                <option value="crm-contact">CRM: Kontakt</option>
-                <option value="supplier-contact">Leverandør: Kontakt</option>
-                </select>
-            </div>
+            <select class="mb-3" name="action" id="action">
+            <option value="order">OD: Ordre</option>
+            <option value="supplier-contact">Leverandør: Kontakt</option>
+            <option value="inquiries">Forespørgsel</option>
+            <option value="weborder">Webshop: Ordre</option>
+            <option value="valgshops">Valgshop</option>
+            <option value="crm-slgm">CRM: Salgsmulighed</option>
+            <option value="crm-contact">CRM: Kontakt</option>
+            <option value="product">PD: Produkt</option>
+            <option value="offer">TD: Produkt</option>
+            </select>
 
-            <div>
-                <label for="keyword">Keywords</label>
-                <input type="text" id="keyword" name="keyword" required>
-            </div>
+            <input class="mb-3" type="text" id="keyword" name="keyword" placeholder="Søg" required>
 
             <button type="submit" class="mt-3">Submit</button>
         </fieldset>

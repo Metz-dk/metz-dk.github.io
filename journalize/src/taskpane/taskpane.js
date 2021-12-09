@@ -22,7 +22,7 @@
         var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
         var outputEl = $(".search-result").empty();
 
-        $("<p>").addClass("color-blue").text("... please wait...").appendTo(outputEl);
+        outputEl.append(`<p class="color-blue">... please wait...</p>`);
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
@@ -90,7 +90,7 @@
         var app = docid.split('|')[0];
         var outputEl = $(".search-result");
 
-        $("<p>").addClass("color-blue").text("... sending data (please wait) ...").appendTo(outputEl);
+        outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           if (result.status !== "succeeded") {

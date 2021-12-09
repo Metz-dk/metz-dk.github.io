@@ -11,8 +11,16 @@
      padding: 0;
 }
 
+.w-100 {
+    width: 100%;
+}
+
 .p-2 {
     padding: 0.5rem;
+}
+
+.p-3 {
+    padding: 1rem;
 }
 
 .m-1 {
