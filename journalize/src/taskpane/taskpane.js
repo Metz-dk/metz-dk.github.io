@@ -19,29 +19,35 @@
 
         let action = document.querySelector('#action').value;
         let keyword = document.getElementById("keyword").value;
-        var requestUrl = 'https://api-dev.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
-        var searchEl = $(".search-result").empty();
+        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
+        var outputEl = $(".search-result").empty();
 
-        $("<p>").addClass("color-blue").text("please wait...").appendTo(searchEl);
+        $("<p>").addClass("color-blue").text("... please wait...").appendTo(outputEl);
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
         xhttp.send();
         
         xhttp.onload = function() {
-          searchEl.empty();
           if (xhttp.status != 200) { // analyze HTTP status of the response
-            printError(searchEl, "Error happened, try again or contact it@metz.dk");
+            printError(outputEl);
           } else { // show the result
-            buildSearchResult(searchEl, JSON.parse(this.responseText));
+            var res  = JSON.parse(this.responseText);
+            if (res.status===1) {
+              buildSearchResult(outputEl, res);
+            }
+            else {
+              printError(outputEl, res.message);
+            }
           }
         };
 
         xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-          printError(searchEl, "Error happened, try again or contact it@metz.dk");
+          printError(outputEl);
         };
 
         function buildSearchResult(parent, data) {
+          parent.empty();
           let action = data.action;
           let docs = data.docs;
       
@@ -70,13 +76,6 @@
           $("<button>")
           .attr("type", "submit")
           .text("Journalize").appendTo(parent);
-      
-          let debug = $("<div>").addClass("mt-2").appendTo(parent);
-          $("<small>").text("server: " + data.server).appendTo(debug);
-          $("<br/>").appendTo(debug);
-          $("<small>").text("keyword: " + data.keyword).appendTo(debug);
-          $("<br/>").appendTo(debug);
-          $("<small>").text("action: " + data.action).appendTo(debug);
         }
       });
     });
@@ -89,13 +88,13 @@
 
         var docid = $("input[type=radio][name='doc']:checked").val();
         var app = docid.split('|')[0];
-        var searchEl = $(".search-result");
+        var outputEl = $(".search-result");
 
-        searchEl.html("... sending data (please wait) ...");
+        $("<p>").addClass("color-blue").text("... sending data (please wait) ...").appendTo(outputEl);
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           if (result.status !== "succeeded") {
-            printError(searchEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
+            printError(outputEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
             return;
           }
 
@@ -114,7 +113,7 @@
             "docid": docid
           };
 
-          var endpoint = "https://api-dev.metz.dk/journalize/v1/" + app;
+          var endpoint = "https://api.metz.dk/journalize/v1/" + app;
           var xhttp = new XMLHttpRequest();
           xhttp.open("POST", endpoint, true);
           xhttp.setRequestHeader("Content-type", "application/json");
@@ -122,29 +121,38 @@
 
           xhttp.onload = function() {
             if (xhttp.status != 200) { // analyze HTTP status of the response
-              sendMemoError("Error happened, try again or contact it@metz.dk");
+              printError(outputEl);
             } else { // show the result
-              searchEl.empty();
-              confirmLink(searchEl, JSON.parse(this.responseText));
+              var res  = JSON.parse(this.responseText);
+              if (res.status===1) {
+                confirmLink(outputEl, res);
+              }
+              else {
+                printError(outputEl, res.message);
+              }
             }
           };
 
           xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-            printError(searchEl, "Request failed");
+            printError(outputEl);
           };
         
           function confirmLink(parent, data) {
-            $("<p>").addClass("color-green").html(data.message).appendTo(parent);
-          }      
+//            $("<p>").addClass("color-green").html("Mail journalized succesfully").appendTo(parent);
+            parent.append(`<span class="color-green">Mail journalized succesfully"</p>`);
+            parent.append(`<a href="${data.memo}" target="_blank">View Notes mail</a>`);
+            parent.append(`<a href="${data.doc}" target="_blank">View document</a>`);
+          }
         });
       });
     });
 
-    function printError(el, txt) {
+    function printError(el, message) {
       el.empty();
+      message = message || "Error happened, try again or contact it@metz.dk";
       $("<p>")
       .addClass("color-red")
-      .text(txt).appendTo(searchEl);
+      .text(message).appendTo(el);
     }
 
   };
