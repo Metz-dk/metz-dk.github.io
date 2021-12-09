@@ -63,10 +63,7 @@
               .attr('required', 'required')
               .val(`${action}|${docs[i].unid}`)
               .appendTo(li);
-              $("<label>")
-              .attr('for', `doc${docs[i].unid}`)
-              .text(docs[i].title)
-              .appendTo(li);
+              li.append(`<label class="ml-1" for="doc${docs[i].unid}">${docs[i].title}</label>`);
             }
           }
           else {
@@ -138,10 +135,10 @@
           };
         
           function confirmLink(parent, data) {
-//            $("<p>").addClass("color-green").html("Mail journalized succesfully").appendTo(parent);
-            parent.append(`<span class="color-green">Mail journalized succesfully"</p>`);
-            parent.append(`<a href="${data.memo}" target="_blank">View Notes mail</a>`);
-            parent.append(`<a href="${data.doc}" target="_blank">View document</a>`);
+            parent.empty();
+            parent.append(`<p class="color-green">Mail journalized succesfully"</p>`);
+            parent.append(`<p><a href="${data.memo}" target="_blank">View Notes mail</a></p>`);
+            parent.append(`<p><a href="${data.doc}" target="_blank">View document</a></p>`);
           }
         });
       });
