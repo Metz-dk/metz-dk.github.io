@@ -24,6 +24,7 @@ textarea {
     margin: 0;
     max-width: 100%;
     box-sizing: border-box;
+    height: 1.8px;
 }
 
 .w-100 {
