@@ -23,8 +23,6 @@
   <!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
   <AppDomains>
     <AppDomain>https://metz-dk.github.io</AppDomain>
-    <AppDomain>https://api-dev.metz.dk</AppDomain>
-    <AppDomain>notes://METZ1@METZ</AppDomain>    
   </AppDomains>
   
   <!--End Basic Settings. -->
