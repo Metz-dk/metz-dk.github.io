@@ -12,7 +12,7 @@
     -webkit-font-smoothing: antialiased;
     color: #323130;
     font-family: 'Segoe UI Web (West European)','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
-    font-size: 14px;
+    font-size: 100%;
 }
 
 button,
@@ -24,7 +24,11 @@ textarea {
     margin: 0;
     max-width: 100%;
     box-sizing: border-box;
-    height: 1.8px;
+    height: 1.5px;
+}
+
+ul li {
+    margin-top: 0.25rem;
 }
 
 .w-100 {
