@@ -13,7 +13,7 @@
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
     <!-- Office CSS Fabric Core icons and fonts -->
-    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
 
     <!-- used for ajax -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js" type="text/javascript"></script>
@@ -22,28 +22,32 @@
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body class="ms-Fabric" dir="ltr">
 
     <main id="app-body">
         <form name="search">
         <fieldset class="p-3">
             <legend>Application</legend>
 
-            <select class="mb-3" name="action" id="action">
-            <option value="order">OD: Ordre</option>
-            <option value="supplier-contact">Leverandør: Kontakt</option>
-            <option value="inquiries">Forespørgsel</option>
-            <option value="weborder">Webshop: Ordre</option>
-            <option value="valgshops">Valgshop</option>
-            <option value="crm-slgm">CRM: Salgsmulighed</option>
-            <option value="crm-contact">CRM: Kontakt</option>
-            <option value="product">PD: Produkt</option>
-            <option value="offer">TD: Produkt</option>
-            </select>
+            <div class="mb-3">
+                <select name="action" id="action">
+                <option value="order">OD: Ordre</option>
+                <option value="supplier-contact">Leverandør: Kontakt</option>
+                <option value="inquiries">Forespørgsel</option>
+                <option value="weborder">Webshop: Ordre</option>
+                <option value="valgshops">Valgshop</option>
+                <option value="crm-slgm">CRM: Salgsmulighed</option>
+                <option value="crm-contact">CRM: Kontakt</option>
+                <option value="product">PD: Produkt</option>
+                <option value="offer">TD: Produkt</option>
+                </select>
+            </div>
 
-            <input class="mb-3" type="text" id="keyword" name="keyword" placeholder="Søg" required>
+            <div class="mb-3">
+                <input type="text" id="keyword" name="keyword" placeholder="Søg" required>
+            </div>
 
-            <button type="submit" class="mt-3">Submit</button>
+            <button type="search" class="mt-3">Submit</button>
         </fieldset>
         </form>
 
