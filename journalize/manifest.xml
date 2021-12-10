@@ -94,9 +94,43 @@
           </ExtensionPoint>
           <!-- Go to http://aka.ms/ExtensionPointsCommands to learn how to add more Extension Points: MessageRead, AppointmentOrganizer, AppointmentAttendee -->
         </DesktopFormFactor>
+      </Host>
+    </Hosts>
 
-        <!-- iOS/Android settings -->
-        <MobileFormFactor>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon-16" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-16.png"/>
+        <bt:Image id="Icon-32" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-32.png"/>
+        <bt:Image id="Icon-64" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
+        <bt:Image id="Icon-80" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-80.png"/>
+        <bt:Image id="Icon-128" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
+        <bt:Image id="Icon-org" DefaultValue="https://metz-dk.github.io/journalize/assets/logo-filled.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://metz-dk.github.io/journalize/src/commands/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://metz-dk.github.io/journalize/src/taskpane/taskpane.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Metz"/>
+        <bt:String id="ActionJournalize.Label" DefaultValue="Journalize"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="ActionJournalize.Tooltip" DefaultValue="Journalize selected emails."/>
+      </bt:LongStrings>
+    </Resources>
+
+    <!-- VersionOverrides for the v1.1 schema -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.3">
+          <bt:Set Name="Mailbox" />
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <!-- Desktop and Web Desktop -->
+        <DesktopFormFactor>
+          <!-- Location of the Functions that UI-less buttons can trigger (ExecuteFunction Actions). -->
           <FunctionFile resid="Commands.Url"/>
 
           <!-- Message Read-->
@@ -127,30 +161,66 @@
               </Group>
             </OfficeTab>
           </ExtensionPoint>
-        </MobileFormFactor>
+          <!-- Go to http://aka.ms/ExtensionPointsCommands to learn how to add more Extension Points: MessageRead, AppointmentOrganizer, AppointmentAttendee -->
+        </DesktopFormFactor>
 
-      </Host>
-    </Hosts>
-    <Resources>
-      <bt:Images>
-        <bt:Image id="Icon-16" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-16.png"/>
-        <bt:Image id="Icon-32" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-32.png"/>
-        <bt:Image id="Icon-64" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
-        <bt:Image id="Icon-80" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-80.png"/>
-        <bt:Image id="Icon-128" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
-        <bt:Image id="Icon-org" DefaultValue="https://metz-dk.github.io/journalize/assets/logo-filled.png"/>
-      </bt:Images>
-      <bt:Urls>
-        <bt:Url id="Commands.Url" DefaultValue="https://metz-dk.github.io/journalize/src/commands/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://metz-dk.github.io/journalize/src/taskpane/taskpane.html"/>
-      </bt:Urls>
-      <bt:ShortStrings>
-        <bt:String id="GroupLabel" DefaultValue="Metz"/>
-        <bt:String id="ActionJournalize.Label" DefaultValue="Journalize"/>
-      </bt:ShortStrings>
-      <bt:LongStrings>
-        <bt:String id="ActionJournalize.Tooltip" DefaultValue="Journalize selected emails."/>
-      </bt:LongStrings>
-    </Resources>
+          <!-- iOS/Android settings -->
+          <MobileFormFactor>
+            <FunctionFile resid="Commands.Url"/>
+            <!-- Message Read-->
+            <ExtensionPoint xsi:type="MobileMessageReadCommandSurface">
+              <Group id="mobileMsgRead">
+                <Label resid="GroupLabel"/>
+                
+                <!-- button: Journalize -->
+                <Control xsi:type="MobileButton" id="MobileActionJournalize">
+                  <Label resid="ActionJournalize.Label"/>
+                  <Icon xsi:type="bt:MobileIconList">
+                    <bt:Image size="25" scale="1" resid="Icon-16"/>
+                    <bt:Image size="25" scale="2" resid="Icon-16"/>
+                    <bt:Image size="25" scale="3" resid="Icon-16"/>
+
+                    <bt:Image size="32" scale="1" resid="Icon-32"/>
+                    <bt:Image size="32" scale="2" resid="Icon-32"/>
+                    <bt:Image size="32" scale="3" resid="Icon-32"/>
+
+                    <bt:Image size="48" scale="1" resid="Icon-64"/>
+                    <bt:Image size="48" scale="2" resid="Icon-64"/>
+                    <bt:Image size="48" scale="3" resid="Icon-64"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </ExtensionPoint>
+          </MobileFormFactor>
+        </Host>
+      </Hosts>
+
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon-16" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-16.png"/>
+          <bt:Image id="Icon-32" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-32.png"/>
+          <bt:Image id="Icon-64" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
+          <bt:Image id="Icon-80" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-80.png"/>
+          <bt:Image id="Icon-128" DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
+          <bt:Image id="Icon-org" DefaultValue="https://metz-dk.github.io/journalize/assets/logo-filled.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://metz-dk.github.io/journalize/src/commands/commands.html"/>
+          <bt:Url id="Taskpane.Url" DefaultValue="https://metz-dk.github.io/journalize/src/taskpane/taskpane.html"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="GroupLabel" DefaultValue="Metz"/>
+          <bt:String id="ActionJournalize.Label" DefaultValue="Journalize"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="ActionJournalize.Tooltip" DefaultValue="Journalize selected emails."/>
+        </bt:LongStrings>
+      </Resources>
+      
+    </VersionOverrides>
   </VersionOverrides>
+
 </OfficeApp>
