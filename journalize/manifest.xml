@@ -59,6 +59,7 @@
     </Requirements>
     <Hosts>
       <Host xsi:type="MailHost">
+        <!-- Desktop and Web Desktop -->
         <DesktopFormFactor>
           <!-- Location of the Functions that UI-less buttons can trigger (ExecuteFunction Actions). -->
           <FunctionFile resid="Commands.Url"/>
@@ -93,6 +94,41 @@
           </ExtensionPoint>
           <!-- Go to http://aka.ms/ExtensionPointsCommands to learn how to add more Extension Points: MessageRead, AppointmentOrganizer, AppointmentAttendee -->
         </DesktopFormFactor>
+
+        <!-- iOS/Android settings -->
+        <MobileFormFactor>
+          <FunctionFile resid="Commands.Url"/>
+
+          <!-- Message Read-->
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <!-- Up to 6 Groups added per Tab -->
+              <Group id="msgReadGroup">
+                <Label resid="GroupLabel"/>
+
+                <!-- button: Journalize -->
+                <Control xsi:type="Button" id="ActionJournalize">
+                  <Label resid="ActionJournalize.Label"/>
+                  <Supertip>
+                    <Title resid="ActionJournalize.Label"/>
+                    <Description resid="ActionJournalize.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon-16"/>
+                    <bt:Image size="32" resid="Icon-32"/>
+                    <bt:Image size="64" resid="Icon-64"/>
+                    <bt:Image size="80" resid="Icon-80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+                <!-- Go to http://aka.ms/ButtonCommands to learn how to add more Controls: ExecuteFunction and Menu -->
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </MobileFormFactor>
+
       </Host>
     </Hosts>
     <Resources>
