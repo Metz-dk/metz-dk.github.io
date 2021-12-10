@@ -94,6 +94,9 @@ ul li {
     color: red;
 }
 
-form[name=search] input, form[name=search] select {
-    height: 1.5rem;
+form[name=search] input, form[name=search] select, form[name=search] button {
+    border: 1px solid darkgrey;
+    height: 2rem;
+    padding-left: 4px;
+    padding-right: 4px;
 }
