@@ -98,20 +98,19 @@ form[name=search] fieldset {
     border: 1px solid darkgrey;    
 }
 
-form[name=search] input, form[name=search] select, form[name=search] button {
+form[name=search] input, form[name=search] select, button {
     border: 1px solid darkgrey;
     height: 2rem;
 }
 
 form[name=search] input, form[name=search] select {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
-form[name=search] button {
+form button {
     padding-left: 1rem;
     padding-right: 1rem;
 }
-
 
 
