@@ -94,9 +94,24 @@ ul li {
     color: red;
 }
 
+form[name=search] fieldset {
+    border: 1px solid darkgrey;    
+}
+
 form[name=search] input, form[name=search] select, form[name=search] button {
     border: 1px solid darkgrey;
     height: 2rem;
+}
+
+form[name=search] input, form[name=search] select {
     padding-left: 4px;
     padding-right: 4px;
 }
+
+form[name=search] button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+
+
