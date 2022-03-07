@@ -61,8 +61,6 @@
       <Host xsi:type="MailHost">
         <!-- Desktop and Web Desktop -->
         <DesktopFormFactor>
-          <!-- To enable shared folders and shared mailbox scenarios in your add-in -->
-          <SupportsSharedFolders>true</SupportsSharedFolders>
           <!-- Location of the Functions that UI-less buttons can trigger (ExecuteFunction Actions). -->
           <FunctionFile resid="Commands.Url"/>
 
