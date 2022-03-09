@@ -9,14 +9,9 @@
   'use strict';
 
   Office.initialize = function(reason){
-    var outputEl = $(".search-result").empty();
-    outputEl.append(`<p class="color-blue">... 1 ...</p>`);
-
+    
     // search
     jQuery(document).ready(function(){
-      var outputEl = $(".search-result").empty();
-      outputEl.append(`<p class="color-blue">... 2 ...</p>`);
-
       $("form[name='search'] input").focus();
 
       // When user press on search button
