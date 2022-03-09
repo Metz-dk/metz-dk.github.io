@@ -9,13 +9,15 @@
   'use strict';
 
   Office.initialize = function(reason){
-    
+    alert('test: initialize');
     // search
     jQuery(document).ready(function(){
+      alert('test: 1');
       $("form[name='search'] input").focus();
 
       // When user press on search button
       $("form[name='search']").on('submit', function(e){
+        alert('test: 2');
         e.preventDefault();
 
         let action = document.querySelector('#action').value;
@@ -31,8 +33,10 @@
         
         xhttp.onload = function() {
           if (xhttp.status != 200) { // analyze HTTP status of the response
+            alert('test: 3 error');
             printError(outputEl);
           } else { // show the result
+            alert('test: 3 ok');
             var res  = JSON.parse(this.responseText);
             if (res.status===1) {
               buildSearchResult(outputEl, res);
@@ -44,14 +48,17 @@
         };
 
         xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+          alert('test: 4 error');
           printError(outputEl);
         };
 
         function buildSearchResult(parent, data) {
+          alert('test: 5');
           parent.empty();
           let action = data.action;
           let docs = data.docs;
       
+          alert('test: 6');
           if (docs.length > 0) {
             $("<p>").addClass("color-green").text(`${docs.length} document(s) displayed (total: ${data.total})`).appendTo(parent);
             let list = $("<ul>").addClass("my-3").appendTo(parent);
