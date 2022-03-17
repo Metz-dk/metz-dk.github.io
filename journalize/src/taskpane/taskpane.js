@@ -60,9 +60,9 @@
               $("<input>")
               .attr('type', 'radio')
               .attr('name', 'doc')
-              .attr('id', "doc|"+docs[i].unid)
+              .attr('id', "doc"+docs[i].unid)
               .attr('required', 'required')
-              .val(action+docs[i].unid)
+              .val(action+"|"+docs[i].unid)
               .appendTo(li);
               li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
             }
