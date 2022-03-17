@@ -15,7 +15,7 @@
   <ProviderName>Baxx &amp; Metz</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
    <!-- The display name of your add-in. Used on the store and various places of the Office UI such as the add-ins dialog. -->
-  <DisplayName DefaultValue="Journalize (1.0.6)"/>
+  <DisplayName DefaultValue="Journalize (1.0.7)"/>
   <Description DefaultValue="Adds command buttons to the ribbon in Outlook which allow to journalize emails"/>
   <IconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-128.png"/>
