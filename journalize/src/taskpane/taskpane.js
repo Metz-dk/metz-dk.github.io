@@ -23,7 +23,7 @@
         var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
         var outputEl = $(".search-result").empty();
 
-        outputEl.append(`<p class="color-blue">... please wait...</p>`);
+        outputEl.append('<p class="color-blue">... please wait...</p>');
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
@@ -53,18 +53,18 @@
           let docs = data.docs;
       
           if (docs.length > 0) {
-            $("<p>").addClass("color-green").text(`${docs.length} document(s) displayed (total: ${data.total})`).appendTo(parent);
+            $("<p>").addClass("color-green").text(docs.length+" document(s) displayed (total: "+data.total+")").appendTo(parent);
             let list = $("<ul>").addClass("my-3").appendTo(parent);
             for (var i = 0; i < docs.length; i++) {
               let li = $("<li>").appendTo(list);
               $("<input>")
               .attr('type', 'radio')
               .attr('name', 'doc')
-              .attr('id', `doc${docs[i].unid}`)
+              .attr('id', "doc"+docs[i].unid)
               .attr('required', 'required')
-              .val(`${action}|${docs[i].unid}`)
+              .val(action+docs[i].unid)
               .appendTo(li);
-              li.append(`<label class="ml-1" for="doc${docs[i].unid}">${docs[i].title}</label>`);
+              li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
             }
           }
           else {
@@ -138,9 +138,9 @@
           function confirmLink(parent, data) {
             var app = $("#app-journalize #action option:selected").text();
             parent.empty();
-            parent.append(`<p class="color-green">Mail journalized succesfully</p>`);
-            parent.append(`<p><a href="${data.memo}" target="_blank">View Notes mail</a></p>`);
-            parent.append(`<p><a href="${data.doc}" target="_blank">View '${app}' document</a></p>`);
+            parent.append('<p class="color-green">Mail journalized succesfully</p>');
+            parent.append('<p><a href="'+data.memo+'" target="_blank">View Notes mail</a></p>');
+            parent.append('<p><a href="'+data.doc+'" target="_blank">View '+app+' document</a></p>');
           }
         });
       });
