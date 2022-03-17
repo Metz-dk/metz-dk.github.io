@@ -100,9 +100,7 @@
           var ewsurl = Office.context.mailbox.restUrl;
           var ewsItemId = Office.context.mailbox.item.itemId;
           
-          const itemId = Office.context.mailbox.convertToRestId(
-              ewsItemId,
-              Office.MailboxEnums.RestVersion.v2_0);
+          const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
 
           var json = {
             "token": token,
