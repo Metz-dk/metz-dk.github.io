@@ -60,7 +60,7 @@
               $("<input>")
               .attr('type', 'radio')
               .attr('name', 'doc')
-              .attr('id', "doc"+docs[i].unid)
+              .attr('id', "doc|"+docs[i].unid)
               .attr('required', 'required')
               .val(action+docs[i].unid)
               .appendTo(li);
