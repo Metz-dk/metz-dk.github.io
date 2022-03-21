@@ -20,7 +20,7 @@
 
         let action = document.querySelector('#action').value;
         let keyword = document.getElementById("keyword").value;
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + keyword;
+        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword);
         var outputEl = $(".search-result").empty();
 
         outputEl.append('<p class="color-blue">... please wait...</p>');
