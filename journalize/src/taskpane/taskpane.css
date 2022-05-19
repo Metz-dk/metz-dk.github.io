@@ -28,6 +28,7 @@ textarea {
 
 ul {
     list-style-type: none;
+    white-space: nowrap;
     margin: 0;
     padding: 0;
 }
