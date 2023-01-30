@@ -109,7 +109,8 @@
             "ewsurl": ewsurl,
             "docid": docid,
             "to": to,
-            "from": from
+            "from": from,
+            "isFromSharedFolder": Office.context.mailbox.initialData.isFromSharedFolder
           };
 
           var endpoint = "https://api.metz.dk/journalize/v1/" + app;
