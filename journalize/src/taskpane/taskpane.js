@@ -100,6 +100,7 @@
           var ewsurl = Office.context.mailbox.restUrl;
           var ewsItemId = Office.context.mailbox.item.itemId;
           var to = Office.context.mailbox.item.to[0].emailAddress;  // temporary solution to identify shared IT box
+          var from = Office.context.mailbox.item.from.emailAddress;  // temporary solution to identify shared IT box
           const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
 
           var json = {
@@ -107,7 +108,8 @@
             "itemid": itemId,
             "ewsurl": ewsurl,
             "docid": docid,
-            "to": to
+            "to": to,
+            "from": from
           };
 
           var endpoint = "https://api.metz.dk/journalize/v1/" + app;
