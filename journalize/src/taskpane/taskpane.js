@@ -101,6 +101,7 @@
           var ewsItemId = Office.context.mailbox.item.itemId;
           var to = Office.context.mailbox.item.to[0].emailAddress;  // temporary solution to identify shared IT box
           var from = Office.context.mailbox.item.from.emailAddress;  // temporary solution to identify shared IT box
+          var isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder
           const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
 
           var json = {
@@ -110,7 +111,7 @@
             "docid": docid,
             "to": to,
             "from": from,
-            "isFromSharedFolder": Office.context.mailbox.initialData.isFromSharedFolder
+            "isFromSharedFolder": isFromSharedFolder
           };
 
           var endpoint = "https://api.metz.dk/journalize/v1/" + app;
