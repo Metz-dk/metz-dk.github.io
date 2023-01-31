@@ -106,59 +106,59 @@
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docid, user, app, outputEl);
+              linkMemo(token, itemId, ewsurl, docid, user);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docid, user, app, outputEl);
+            linkMemo(token, itemId, ewsurl, docid, user);
+          }
+
+          function linkMemo(token, itemId, ewsurl, docid, user) {
+            const json = {
+              "token": token,
+              "itemid": itemId,
+              "ewsurl": ewsurl,
+              "docid": docid,
+              "user": user
+            };
+      
+            var endpoint = "https://api.metz.dk/journalize/v1/" + app;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", endpoint, true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send(JSON.stringify(json));
+      
+            xhttp.onload = function() {
+              if (xhttp.status != 200) { // analyze HTTP status of the response
+                printError(outputEl);
+              } else { // show the result
+                var res  = JSON.parse(this.responseText);
+                if (res.status===1) {
+                  confirmLink(outputEl, res);
+                }
+                else {
+                  printError(outputEl, res.message);
+                }
+              }
+            };
+      
+            xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+              printError(outputEl);
+            };
+          
+            function confirmLink(parent, data) {
+              var app = $("#app-journalize #action option:selected").text();
+              parent.empty();
+              parent.append('<p class="color-green">Mail journalized succesfully</p>');
+              parent.append('<p><a href="'+data.memo+'" target="_blank">View Notes mail</a></p>');
+              parent.append('<p><a href="'+data.doc+'" target="_blank">View '+app+' document</a></p>');
+            }
           }
         });
       });
     });
-
-    function linkMemo(token, itemId, ewsurl, docid, user, app, outputEl) {
-      const json = {
-        "token": token,
-        "itemid": itemId,
-        "ewsurl": ewsurl,
-        "docid": docid,
-        "user": user
-      };
-
-      var endpoint = "https://api.metz.dk/journalize/v1/" + app;
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", endpoint, true);
-      xhttp.setRequestHeader("Content-type", "application/json");
-      xhttp.send(JSON.stringify(json));
-
-      xhttp.onload = function() {
-        if (xhttp.status != 200) { // analyze HTTP status of the response
-          printError(outputEl);
-        } else { // show the result
-          var res  = JSON.parse(this.responseText);
-          if (res.status===1) {
-            confirmLink(outputEl, res);
-          }
-          else {
-            printError(outputEl, res.message);
-          }
-        }
-      };
-
-      xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-        printError(outputEl);
-      };
-    
-      function confirmLink(parent, data) {
-        var app = $("#app-journalize #action option:selected").text();
-        parent.empty();
-        parent.append('<p class="color-green">Mail journalized succesfully</p>');
-        parent.append('<p><a href="'+data.memo+'" target="_blank">View Notes mail</a></p>');
-        parent.append('<p><a href="'+data.doc+'" target="_blank">View '+app+' document</a></p>');
-      }
-    }
 
     function printError(el, message) {
       el.empty();
