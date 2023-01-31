@@ -102,62 +102,69 @@
             return;
           }
 
-          Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
-            console.log(result);
-          });
-
-          var token = result.value;
-          var ewsurl = Office.context.mailbox.restUrl;
-          var ewsItemId = Office.context.mailbox.item.itemId;
-          var to = Office.context.mailbox.item.to[0].emailAddress;  // temporary solution to identify shared IT box
-          var from = Office.context.mailbox.item.from.emailAddress;  // temporary solution to identify shared IT box
-          var isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder
+          const token = result.value;
+          const ewsurl = Office.context.mailbox.restUrl;
+          const ewsItemId = Office.context.mailbox.item.itemId;
           const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
+          const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
 
-          var json = {
-            "token": token,
-            "itemid": itemId,
-            "ewsurl": ewsurl,
-            "docid": docid,
-            "to": to,
-            "from": from,
-            "isFromSharedFolder": isFromSharedFolder
-          };
-
-          var endpoint = "https://api.metz.dk/journalize/v1/" + app;
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", endpoint, true);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send(JSON.stringify(json));
-
-          xhttp.onload = function() {
-            if (xhttp.status != 200) { // analyze HTTP status of the response
-              printError(outputEl);
-            } else { // show the result
-              var res  = JSON.parse(this.responseText);
-              if (res.status===1) {
-                confirmLink(outputEl, res);
-              }
-              else {
-                printError(outputEl, res.message);
-              }
-            }
-          };
-
-          xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-            printError(outputEl);
-          };
-        
-          function confirmLink(parent, data) {
-            var app = $("#app-journalize #action option:selected").text();
-            parent.empty();
-            parent.append('<p class="color-green">Mail journalized succesfully</p>');
-            parent.append('<p><a href="'+data.memo+'" target="_blank">View Notes mail</a></p>');
-            parent.append('<p><a href="'+data.doc+'" target="_blank">View '+app+' document</a></p>');
+          // shared folder
+          if (isFromSharedFolder) {
+            Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
+              const user = result.value.targetMailbox; 
+              linkMemo(token, itemId, ewsurl, docid, user);
+            });
+          }
+          // private email
+          else {
+            const user = "me"; 
+            linkMemo(token, itemId, ewsurl, docid, user);
           }
         });
       });
     });
+
+    function linkMemo(token, itemId, ewsurl, docid, user) {
+      const json = {
+        "token": token,
+        "itemid": itemId,
+        "ewsurl": ewsurl,
+        "docid": docid,
+        "user": user
+      };
+
+      var endpoint = "https://api.metz.dk/journalize/v1/" + app;
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", endpoint, true);
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.send(JSON.stringify(json));
+
+      xhttp.onload = function() {
+        if (xhttp.status != 200) { // analyze HTTP status of the response
+          printError(outputEl);
+        } else { // show the result
+          var res  = JSON.parse(this.responseText);
+          if (res.status===1) {
+            confirmLink(outputEl, res);
+          }
+          else {
+            printError(outputEl, res.message);
+          }
+        }
+      };
+
+      xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+        printError(outputEl);
+      };
+    
+      function confirmLink(parent, data) {
+        var app = $("#app-journalize #action option:selected").text();
+        parent.empty();
+        parent.append('<p class="color-green">Mail journalized succesfully</p>');
+        parent.append('<p><a href="'+data.memo+'" target="_blank">View Notes mail</a></p>');
+        parent.append('<p><a href="'+data.doc+'" target="_blank">View '+app+' document</a></p>');
+      }
+    }
 
     function printError(el, message) {
       el.empty();
