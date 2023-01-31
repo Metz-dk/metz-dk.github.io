@@ -96,12 +96,6 @@
             return;
           }
           
-          // Link to full sample: https://raw.githubusercontent.com/OfficeDev/office-js-snippets/prod/samples/outlook/65-delegates-and-shared-folders/get-shared-properties.yaml
-          if (!Office.context.mailbox.item.getSharedPropertiesAsync) {
-            console.error("Try this sample on an item from a shared folder.");
-            return;
-          }
-
           const token = result.value;
           const ewsurl = Office.context.mailbox.restUrl;
           const ewsItemId = Office.context.mailbox.item.itemId;
@@ -112,19 +106,19 @@
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docid, user);
+              linkMemo(token, itemId, ewsurl, docid, user, app);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docid, user);
+            linkMemo(token, itemId, ewsurl, docid, user, app);
           }
         });
       });
     });
 
-    function linkMemo(token, itemId, ewsurl, docid, user) {
+    function linkMemo(token, itemId, ewsurl, docid, user, app) {
       const json = {
         "token": token,
         "itemid": itemId,
