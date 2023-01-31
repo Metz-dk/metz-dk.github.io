@@ -95,6 +95,16 @@
             printError(outputEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
             return;
           }
+          
+          // Link to full sample: https://raw.githubusercontent.com/OfficeDev/office-js-snippets/prod/samples/outlook/65-delegates-and-shared-folders/get-shared-properties.yaml
+          if (!Office.context.mailbox.item.getSharedPropertiesAsync) {
+            console.error("Try this sample on an item from a shared folder.");
+            return;
+          }
+
+          Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
+            console.log(result);
+          });
 
           var token = result.value;
           var ewsurl = Office.context.mailbox.restUrl;
