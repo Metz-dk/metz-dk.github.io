@@ -106,19 +106,19 @@
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docid, user, app);
+              linkMemo(token, itemId, ewsurl, docid, user, app, outputEl);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docid, user, app);
+            linkMemo(token, itemId, ewsurl, docid, user, app, outputEl);
           }
         });
       });
     });
 
-    function linkMemo(token, itemId, ewsurl, docid, user, app) {
+    function linkMemo(token, itemId, ewsurl, docid, user, app, outputEl) {
       const json = {
         "token": token,
         "itemid": itemId,
