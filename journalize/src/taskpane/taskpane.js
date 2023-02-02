@@ -101,27 +101,28 @@
           const ewsItemId = Office.context.mailbox.item.itemId;
           const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
           const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
-
+          const userProfile = Office.context.mailbox.userProfile;
           // shared folder
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docid, user);
+              linkMemo(token, itemId, ewsurl, docid, user, userProfile);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docid, user);
+            linkMemo(token, itemId, ewsurl, docid, user, userProfile);
           }
 
-          function linkMemo(token, itemId, ewsurl, docid, user) {
+          function linkMemo(token, itemId, ewsurl, docid, user, userProfile) {
             const json = {
               "token": token,
               "itemid": itemId,
               "ewsurl": ewsurl,
               "docid": docid,
-              "user": user
+              "user": user,
+              "userProfile": userProfile
             };
       
             var endpoint = "https://api.metz.dk/journalize/v1/" + app;
