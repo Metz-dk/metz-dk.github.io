@@ -58,10 +58,9 @@
             for (var i = 0; i < docs.length; i++) {
               let li = $("<li>").appendTo(list);
               $("<input>")
-              .attr('type', 'radio')
+              .attr('type', 'checkbox')
               .attr('name', 'doc')
               .attr('id', "doc"+docs[i].unid)
-              .attr('required', 'required')
               .val(action+"|"+docs[i].unid)
               .appendTo(li);
               li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
@@ -84,8 +83,17 @@
       $("form[name='search-result'").on('submit', function(e){
         e.preventDefault();
 
-        var docid = $("input[type=radio][name='doc']:checked").val();
-        var app = docid.split('|')[0];
+        // quit if none selected
+        var docChecked = $("input[type=checkbox][name='doc']:checked");
+        if (docChecked.length === 0) return;
+
+        // get all selected values
+        var docArr = [];
+        docChecked.each(function(){
+          docArr.push($(this).val());
+        });
+
+        var app = docArr[0].split('|')[0];  // just to get what type of document it is
         var outputEl = $(".search-result");
 
         outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
@@ -107,21 +115,21 @@
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docid, user, emailAddress);
+              linkMemo(token, itemId, ewsurl, docArr, user, emailAddress);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docid, user, emailAddress);
+            linkMemo(token, itemId, ewsurl, docArr, user, emailAddress);
           }
 
-          function linkMemo(token, itemId, ewsurl, docid, user, emailAddress) {
+          function linkMemo(token, itemId, ewsurl, docArr, user, emailAddress) {
             const json = {
               "token": token,
               "itemid": itemId,
               "ewsurl": ewsurl,
-              "docid": docid,
+              "docArr": docArr,
               "user": user,
               "emailAddress": emailAddress
             };
