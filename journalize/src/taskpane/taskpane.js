@@ -162,7 +162,7 @@
               parent.append('<p class="color-green">Mail journalized succesfully</p>');
 
               $.each(data.docs, function(index, value) {
-                parent.append('<p><a href="'+value.url+'" target="_blank">'+index + '. ' + value.docid+'</a></p>');
+                parent.append('<p><a href="'+value.url+'" target="_blank">'+value.title+'</a></p>');
               });
             }
           }
