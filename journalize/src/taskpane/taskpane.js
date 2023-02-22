@@ -61,7 +61,7 @@
               .attr('type', 'checkbox')
               .attr('name', 'doc')
               .attr('id', "doc"+docs[i].unid)
-              .val(action+"|"+docs[i].unid)
+              .val(docs[i].unid)
               .appendTo(li);
               li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
             }
@@ -88,9 +88,9 @@
         if (docChecked.length === 0) return;
 
         // get all selected values
-        var docArr = [];
+        var docs = [];
         docChecked.each(function(){
-          docArr.push($(this).val());
+          docs.push($(this).val());
         });
 
         var app = docArr[0].split('|')[0];  // just to get what type of document it is
@@ -115,25 +115,26 @@
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
               const user = result.value.targetMailbox; 
-              linkMemo(token, itemId, ewsurl, docArr, user, emailAddress);
+              linkMemo(token, itemId, ewsurl, docs, user, emailAddress);
             });
           }
           // private email
           else {
             const user = "me"; 
-            linkMemo(token, itemId, ewsurl, docArr, user, emailAddress);
+            linkMemo(token, itemId, ewsurl, docs, user, emailAddress);
           }
 
-          function linkMemo(token, itemId, ewsurl, docArr, user, emailAddress) {
+          function linkMemo(token, itemId, ewsurl, docs, user, emailAddress) {
             const json = {
               "token": token,
               "itemid": itemId,
               "ewsurl": ewsurl,
-              "docArr": docArr,
+              "docs": docs,
               "user": user,
               "emailAddress": emailAddress
             };
       
+            var app = $("#app-journalize #action option:selected").text();
             var endpoint = "https://api.metz.dk/journalize/v1/" + app;
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", endpoint, true);
