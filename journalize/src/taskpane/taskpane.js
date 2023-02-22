@@ -132,7 +132,7 @@
               "emailAddress": emailAddress
             };
       
-            var app = $("#app-journalize #action option:selected").text();
+            var app = $("#app-journalize #action option:selected").val();
             var endpoint = "https://api.metz.dk/journalize/v1/" + app;
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", endpoint, true);
