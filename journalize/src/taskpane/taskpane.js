@@ -93,9 +93,7 @@
           docs.push($(this).val());
         });
 
-        var app = docArr[0].split('|')[0];  // just to get what type of document it is
         var outputEl = $(".search-result");
-
         outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
