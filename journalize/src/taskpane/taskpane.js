@@ -12,7 +12,7 @@
     
     // search
     jQuery(document).ready(function(){
-      $("form[name='search'] input").focus();
+      //$("form[name='search'] input").focus();
 
       // When user press on search button
       $("form[name='search']").on('submit', function(e){
