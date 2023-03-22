@@ -12,7 +12,6 @@
     
     // search
     jQuery(document).ready(function(){
-      //$("form[name='search'] input").focus();
       $("form[name='search'] select").focus();
       
       // When user press on search button
