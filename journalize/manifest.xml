@@ -11,14 +11,14 @@
 
   <!-- IMPORTANT! Id must be unique for your add-in, if you reuse this manifest ensure that you
   change this id to a new GUID. -->
-  <Id>a18de30c-141b-4967-90a6-793df473fcb0</Id>
+  <Id>a18de30c-141b-4967-90a6-793df473fcb2</Id>
   <!--Version. Updates from the store only get triggered if there is a version change. -->
   <Version>1.0.15</Version>
   <ProviderName>Metz</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <!-- The display name of your add-in. Used on the store and various places of the Office UI such
   as the add-ins dialog. -->
-  <DisplayName DefaultValue="Journalize (1.0.15)" />
+  <DisplayName DefaultValue="Journalize2 (1.0.15)" />
   <Description
     DefaultValue="Adds command buttons to the ribbon in Outlook which allow to journalize emails" />
   <IconUrl DefaultValue="https://metz-dk.github.io/journalize/assets/icon-64.png" />
@@ -184,6 +184,31 @@
             Actions). -->
             <FunctionFile resid="Commands.Url" />
 
+          <!-- Message Compose-->
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgComposeGroup">
+                <Label resid="GroupLabel2" />
+                <Control xsi:type="Button" id="ActionJournalize2">
+                  <Label resid="ActionJournalize.Label2" />
+                  <Supertip>
+                    <Title resid="ActionJournalize.Label2" />
+                    <Description resid="ActionJournalize.Tooltip2" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon-16" />
+                    <bt:Image size="32" resid="Icon-32" />
+                    <bt:Image size="64" resid="Icon-64" />
+                    <bt:Image size="80" resid="Icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+
             <!-- Message Read-->
             <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
@@ -275,9 +300,12 @@
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Metz" />
           <bt:String id="ActionJournalize.Label" DefaultValue="Journalize" />
+          <bt:String id="GroupLabel2" DefaultValue="Metz2" />
+          <bt:String id="ActionJournalize.Label2" DefaultValue="Journalize2" />
         </bt:ShortStrings>
         <bt:LongStrings>
           <bt:String id="ActionJournalize.Tooltip" DefaultValue="Journalize selected emails." />
+            <bt:String id="ActionJournalize.Tooltip2" DefaultValue="Journalize selected emails.22" />
         </bt:LongStrings>
       </Resources>
 
