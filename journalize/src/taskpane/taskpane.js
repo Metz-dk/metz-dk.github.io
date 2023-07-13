@@ -9,20 +9,24 @@
   'use strict';
 
   Office.initialize = function(reason){
-    
+    console.log(100);
     // search
     jQuery(document).ready(function(){
+      console.log(110);      
       $("form[name='search'] select").focus();
-      
+      console.log(0);      
       // When user press on search button
       $("form[name='search']").on('submit', function(e){
+        console.log(1);
         e.preventDefault();
-
         let action = document.querySelector('#action').value;
+        console.log(2);
         let keyword = document.getElementById("keyword").value;
+        console.log(3);
         var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword);
+        console.log(4);
         var outputEl = $(".search-result").empty();
-
+        console.log(5);
         outputEl.append('<p class="color-blue">... please wait...</p>');
 
         var xhttp = new XMLHttpRequest();
