@@ -19,7 +19,10 @@
 
         let action = document.querySelector('#action').value;
         let keyword = document.getElementById("keyword").value;
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword);
+        let checkbox = document.getElementById("recent");       
+        let recent = checkbox.checked ? "1" : "0";
+
+        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent;
         var outputEl = $(".search-result").empty();
         outputEl.append('<p class="color-blue">... please wait...</p>');
 

@@ -114,4 +114,10 @@ form button {
     padding-right: 1rem;
 }
 
+.flex {
+    display: flex;
+}
 
+.align-items-center {
+    align-items: center;
+}
