@@ -9,6 +9,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI Web (West European)','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;
     font-size: 100%;
 }
 
@@ -16,6 +17,7 @@ button,
 input,
 select,
 textarea {
+    font-family: inherit;
     font-size: 100%;
     margin: 0;
     max-width: 100%;
