@@ -16,7 +16,7 @@
     <!-- used for ajax -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js" type="text/javascript"></script>
 
-    <script type="text/javascript" src="taskpane.js?v=17052023-10"></script>
+    <script type="text/javascript" src="taskpane.js?v=17052024-13"></script>
     <link href="taskpane.css?v=17052024-13" rel="stylesheet" type="text/css" />
 </head>
 
@@ -58,18 +58,23 @@
                     <label for="recent" class="ml-1">Search recent changes (slow)</label>
                 </div>
 
-                <div class="flex">
-                    <button type="search">Search</button>
+                <button type="search">Search</button>
+            </fieldset>
+        </form>
+
+        <div class="js-search-status"></div>
+
+        <section class="p-2 js-search-section" style="display:none">
+            <form class="search-form" id="search-result" name="search-result">
+                <div class="js-search-result"></div>
+
+                <div class="flex js-search-action">
+                    <button type="submit">Journalize</button>
                     <div class="ml-2 flex align-items-center">
                         <input type="checkbox" id="approval" name="approval">
                         <label for="approval" class="ml-1">Approval email</label>
                     </div>
                 </div>
-            </fieldset>
-        </form>
-
-        <section class="p-2">
-            <form class="search-result" id="search-result" name="search-result">
             </form>
         </section>
     </main>

@@ -21,12 +21,12 @@
         let keyword = document.getElementById("keyword").value;
         let recentControl = document.getElementById("recent");
         let recent = recentControl.checked ? "1" : "0";
-        let approvalControl = document.getElementById("approval");
-        let approval = approvalControl.checked ? "1" : "0";
 
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent + '&approval=' + approval;
-        var outputEl = $(".search-result").empty();
-        outputEl.append('<p class="color-blue">... please wait...</p>');
+        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent;
+        var searchSection = $(".js-search-section").hide();
+        var searchResult = $(".js-search-result").empty();
+        var searchStatus = $(".js-search-status").empty();
+        searchStatus.append('<p class="color-blue">... please wait...</p>');
 
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
@@ -34,20 +34,21 @@
         
         xhttp.onload = function() {
           if (xhttp.status != 200) { // analyze HTTP status of the response
-            printError(outputEl);
+            printError(searchStatus);
           } else { // show the result
-            var res  = JSON.parse(this.responseText);
+            var res = JSON.parse(this.responseText);
             if (res.status===1) {
-              buildSearchResult(outputEl, res);
+              searchSection.show();
+              buildSearchResult(searchResult, res);
             }
             else {
-              printError(outputEl, res.message);
+              printError(searchStatus, res.message);
             }
           }
         };
 
         xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-          printError(outputEl);
+          printError(searchStatus);
         };
 
         function buildSearchResult(parent, data) {
@@ -72,10 +73,6 @@
           else {
             $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
           }
-
-          $("<button>")
-          .attr("type", "submit")
-          .text("Journalize").appendTo(parent);
         }
       });
     });
@@ -89,6 +86,9 @@
         // quit if none selected
         var docChecked = $("input[type=checkbox][name='doc']:checked");
         if (docChecked.length === 0) return;
+
+        let approvalControl = document.getElementById("approval");
+        let approval = approvalControl.checked;
 
         // get all selected values
         var docs = [];
@@ -128,7 +128,8 @@
               "itemid": itemId,
               "docs": docs,
               "user": user,
-              "emailAddress": emailAddress
+              "emailAddress": emailAddress,
+              "approval": approval
             };
       
             var app = $("#app-journalize #action option:selected").val();
