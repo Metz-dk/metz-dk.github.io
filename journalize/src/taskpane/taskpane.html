@@ -17,54 +17,60 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js" type="text/javascript"></script>
 
     <script type="text/javascript" src="taskpane.js?v=17052023-10"></script>
-    <link href="taskpane.css?v=23112023-12" rel="stylesheet" type="text/css" />
+    <link href="taskpane.css?v=17052024-13" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
     <main id="app-journalize">
         <form name="search">
-        <fieldset class="p-2">
-            <legend>Application</legend>
+            <fieldset class="p-2">
+                <legend>Application</legend>
 
-            <div class="mb-3">
-                <select class="w-100" name="action" id="action">
-                <option value="order-open">1. OD: Ordre - Åben</option>
-                <option value="crm-slgm-open">2. CRM: Salgsmulighed - Åben</option>
-                <option value="weborder">3. Webshop: Ordre</option>
-                <option value="inquiries">4. Forespørgsel</option>
-                <option disabled>------------------------</option>
-                <option value="report">Afregninger</option>
-                <option value="crm-slgm-closed">CRM: Salgsmulighed - Afsluttet</option>
-                <option value="crm-contact">CRM: Kontakt</option>
-                <option value="crm-company">CRM: Firma</option>
-                <option value="supplier-slgm">Leverandør: Salgsmulighed</option>
-                <option value="supplier-contact">Leverandør: Kontakt</option>
-                <option value="supplier-company">Leverandør: Firma</option>
-                <option value="order-closed">OD: Ordre - Afsluttet</option>
-                <option value="order-rma">OD: RMA</option>
-                <option value="product">PD: Produkt</option>
-                <option value="offer">TD: Produkt</option>
-                <option value="valgshops">Valgshop</option>
-                </select>
-            </div>
+                <div class="mb-3">
+                    <select class="w-100" name="action" id="action">
+                        <option value="order-open">1. OD: Ordre - Åben</option>
+                        <option value="crm-slgm-open">2. CRM: Salgsmulighed - Åben</option>
+                        <option value="weborder">3. Webshop: Ordre</option>
+                        <option value="inquiries">4. Forespørgsel</option>
+                        <option disabled>------------------------</option>
+                        <option value="report">Afregninger</option>
+                        <option value="crm-slgm-closed">CRM: Salgsmulighed - Afsluttet</option>
+                        <option value="crm-contact">CRM: Kontakt</option>
+                        <option value="crm-company">CRM: Firma</option>
+                        <option value="supplier-slgm">Leverandør: Salgsmulighed</option>
+                        <option value="supplier-contact">Leverandør: Kontakt</option>
+                        <option value="supplier-company">Leverandør: Firma</option>
+                        <option value="order-closed">OD: Ordre - Afsluttet</option>
+                        <option value="order-rma">OD: RMA</option>
+                        <option value="product">PD: Produkt</option>
+                        <option value="offer">TD: Produkt</option>
+                        <option value="valgshops">Valgshop</option>
+                    </select>
+                </div>
 
-            <div class="mb-2">
-                <input class="w-100" type="text" id="keyword" name="keyword" placeholder="Søg" required>
-            </div>
+                <div class="mb-2">
+                    <input class="w-100" type="text" id="keyword" name="keyword" placeholder="Søg" required>
+                </div>
 
-            <div class="mb-3 flex align-items-center">
-                <input type="checkbox" id="recent" name="recent" />
-                <label for="recent" class="ml-1">Search recent changes (slow)</label>
-            </div>
+                <div class="mb-3 flex align-items-center">
+                    <input type="checkbox" id="recent" name="recent" />
+                    <label for="recent" class="ml-1">Search recent changes (slow)</label>
+                </div>
 
-            <button type="search">Search</button>
-        </fieldset>
+                <div class="flex">
+                    <button type="search">Search</button>
+                    <div class="ml-2 flex align-items-center">
+                        <input type="checkbox" id="approval" name="approval">
+                        <label for="approval" class="ml-1">Approval email</label>
+                    </div>
+                </div>
+            </fieldset>
         </form>
 
         <section class="p-2">
-        <form class="search-result" id="search-result" name="search-result">
-        </form>
+            <form class="search-result" id="search-result" name="search-result">
+            </form>
         </section>
     </main>
 </body>

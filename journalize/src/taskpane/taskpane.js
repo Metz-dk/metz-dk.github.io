@@ -19,10 +19,12 @@
 
         let action = document.querySelector('#action').value;
         let keyword = document.getElementById("keyword").value;
-        let checkbox = document.getElementById("recent");       
-        let recent = checkbox.checked ? "1" : "0";
+        let recentControl = document.getElementById("recent");
+        let recent = recentControl.checked ? "1" : "0";
+        let approvalControl = document.getElementById("approval");
+        let approval = approvalControl.checked ? "1" : "0";
 
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent;
+        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent + '&approval=' + approval;
         var outputEl = $(".search-result").empty();
         outputEl.append('<p class="color-blue">... please wait...</p>');
 
