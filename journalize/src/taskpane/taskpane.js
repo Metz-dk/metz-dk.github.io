@@ -33,6 +33,7 @@
         xhttp.send();
         
         xhttp.onload = function() {
+          searchStatus.empty();
           if (xhttp.status != 200) { // analyze HTTP status of the response
             printError(searchStatus);
           } else { // show the result
