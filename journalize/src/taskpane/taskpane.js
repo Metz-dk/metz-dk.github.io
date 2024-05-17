@@ -81,8 +81,10 @@
     // search-result submission
     jQuery(document).ready(function(){
       // When user press on search button
+      console.log($("form[name='search-result'").length);
       $("form[name='search-result'").on('submit', function(e){
         e.preventDefault();
+        alert('yay!');
 
         // quit if none selected
         var docChecked = $("input[type=checkbox][name='doc']:checked");
