@@ -20,6 +20,9 @@
   
         const flag = action === 'order-open' || action === 'order-closed' || action === 'order-rma';
         approvalContainer.toggle(flag);
+
+        // Reset the approval checkbox
+        $('#approval').prop('checked', false);
       });
 
       // When user press on search button
