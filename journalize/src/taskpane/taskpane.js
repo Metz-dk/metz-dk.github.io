@@ -13,6 +13,15 @@
     jQuery(document).ready(function(){
       $("form[name='search'] select").focus();
 
+      // When user changes the action selection
+      $("form[name='search'] select").on('change', function() {
+        let action = $('#action').val();
+        let approvalContainer = $('.js-approval');
+  
+        const flag = action === 'order-open' || action === 'order-closed' || action === 'order-rma';
+        approvalContainer.toggle(flag);
+      });
+
       // When user press on search button
       $("form[name='search']").on('submit', function(e){
         e.preventDefault();
