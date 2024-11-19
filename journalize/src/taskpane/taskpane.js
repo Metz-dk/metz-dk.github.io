@@ -46,13 +46,13 @@
           validationStatus,
           (res) => {
             validationStatus.empty();
-            togglePaneControls(res.valid);
+            togglePaneControls(!res.valid);
             if (!res.valid) {
               printError(validationStatus, (res.message || "Validation error"));
             }
           },
           () => {
-            togglePaneControls(true);
+            togglePaneControls(false);
           }
         );
       }
