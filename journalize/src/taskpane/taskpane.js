@@ -9,60 +9,67 @@
   'use strict';
 
   Office.initialize = function(reason){
-    // validate & disable pane on loads
-    jQuery(document).ready(function(){
-      Office.context.mailbox.getCallbackTokenAsync(function(result) {
+    // Validate & disable pane on load
+    jQuery(document).ready(function () {
+      Office.context.mailbox.getCallbackTokenAsync(function (result) {
         if (result.status !== "succeeded") {
-          printError(outputEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
+          printError(validationStatus, "Error happened (access token was not issued), try again or contact it@metz.dk");
           return;
         }
-        
+
         const ewsItemId = Office.context.mailbox.item.itemId;
         const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
         const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
         const emailAddress = Office.context.mailbox.userProfile.emailAddress;
 
-        // shared folder
-        if (isFromSharedFolder) {
-          Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
-            const user = result.value.targetMailbox; 
-            validateMemo(itemId, docs, user, emailAddress);
-          });
-        }
-        // private email
-        else {
-          const user = "me"; 
-          validateMemo(itemId, user, emailAddress);
-        }
+        const user = isFromSharedFolder
+          ? Office.context.mailbox.item.getSharedPropertiesAsync((result) => result.value.targetMailbox)
+          : "me";
 
-        function validateMemo(itemId, user, emailAddress) {
-          const json = {
-            "itemid": itemId,
-            "user": user,
-            "emailAddress": emailAddress
-          };
-    
-          var endpoint = "https://api.metz.dk/journalize/v1/validate";
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", endpoint, true);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send(JSON.stringify(json));
-    
-          xhttp.onload = function() {
-            if (xhttp.status != 200) { // analyze HTTP status of the response
-              printError(outputEl);
-            } else { // show the result
-              var res  = JSON.parse(this.responseText);
-              printError(outputEl, res.message);              }
-            }
-          };
-    
-          xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-            printError(outputEl);
-          };
-        
-        }
+        validateMemo(itemId, user, emailAddress);
       });
+
+      function validateMemo(itemId, user, emailAddress) {
+        const endpoint = "https://api.metz.dk/journalize/v1/validate";
+        const data = {
+          itemid: itemId,
+          user: user,
+          emailAddress: emailAddress,
+        };
+
+        sendRequest(
+          endpoint,
+          data,
+          (res) => {
+            validationStatus.empty();
+            if (!res.valid) {
+              validationStatus.append('<p class="color-red">' + (res.message || "Validation error") + '</p>');
+              disablePaneControls();
+            }
+          }
+        );
+      }
+
+      function sendRequest(endpoint, data, successCallback, errorCallback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", endpoint, true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(JSON.stringify(data));
+
+        xhttp.onload = function () {
+          if (xhttp.status != 200) {
+            errorCallback();
+          } else {
+            successCallback(JSON.parse(this.responseText));
+          }
+        };
+
+        xhttp.onerror = errorCallback;
+      }
+
+      function disablePaneControls() {
+        $("form[name='search']").find("input, select, button").prop("disabled", true);
+      }
     });
 
     // search
