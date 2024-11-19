@@ -9,8 +9,9 @@
   'use strict';
 
   Office.initialize = function(reason){
-    // Validate & disable pane on load
     jQuery(document).ready(function () {
+      const validationStatus = $(".js-search-status").empty();
+    
       Office.context.mailbox.getCallbackTokenAsync(function (result) {
         if (result.status !== "succeeded") {
           printError(validationStatus, "Error happened (access token was not issued), try again or contact it@metz.dk");
@@ -24,24 +25,25 @@
     
         if (isFromSharedFolder) {
           Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
-            validateMemo(itemId, result.value.targetMailbox, emailAddress);
+            validateMemo(itemId, result.value.targetMailbox, emailAddress, validationStatus);
           });
         } else {
-          validateMemo(itemId, "me", emailAddress);
+          validateMemo(itemId, "me", emailAddress, validationStatus);
         }
       });
     
-      function validateMemo(itemId, user, emailAddress) {
+      function validateMemo(itemId, user, emailAddress, validationStatus) {
         const endpoint = "https://api.metz.dk/journalize/v1/validate";
         const data = {
           itemid: itemId,
           user: user,
           emailAddress: emailAddress,
         };
-
+    
         sendRequest(
           endpoint,
           data,
+          validationStatus,
           (res) => {
             validationStatus.empty();
             if (res.valid) {
@@ -57,13 +59,13 @@
           }
         );
       }
-
-      function sendRequest(endpoint, data, successCallback, errorCallback) {
+    
+      function sendRequest(endpoint, data, validationStatus, successCallback, errorCallback) {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", endpoint, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify(data));
-
+    
         xhttp.onload = function () {
           if (xhttp.status != 200) {
             errorCallback();
@@ -71,10 +73,10 @@
             successCallback(JSON.parse(this.responseText || "{}"));
           }
         };
-
+    
         xhttp.onerror = errorCallback;
       }
-
+    
       function disablePaneControls() {
         $("form[name='search']").find("input, select, button").prop("disabled", true);
       }
