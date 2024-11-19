@@ -46,16 +46,13 @@
           validationStatus,
           (res) => {
             validationStatus.empty();
-            if (res.valid) {
-              validationStatus.append('<p class="color-green">' + (res.message || "Validation succeeded") + '</p>');
-            } else {
-              validationStatus.append('<p class="color-red">' + (res.message || "Validation error") + '</p>');
-              disablePaneControls();
+            togglePaneControls(res.valid);
+            if (!res.valid) {
+              printError(validationStatus, (res.message || "Validation error"));
             }
           },
           () => {
-            printError(validationStatus, "Validation request failed. Check your connection.");
-            disablePaneControls();
+            togglePaneControls(true);
           }
         );
       }
@@ -77,8 +74,8 @@
         xhttp.onerror = errorCallback;
       }
     
-      function disablePaneControls() {
-        $("form[name='search']").find("input, select, button").prop("disabled", true);
+      function togglePaneControls(flag) {
+        $("form[name='search']").find("input, select, button").prop("disabled", flag);
       }
     });
 
