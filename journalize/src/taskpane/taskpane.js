@@ -12,6 +12,8 @@
     // Validate & disable pane on load
     jQuery(document).ready(function () {
       Office.context.mailbox.getCallbackTokenAsync(function (result) {
+        var validationStatus = $(".js-search-status").empty();
+
         if (result.status !== "succeeded") {
           printError(validationStatus, "Error happened (access token was not issued), try again or contact it@metz.dk");
           return;
