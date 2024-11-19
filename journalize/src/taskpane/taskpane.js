@@ -12,25 +12,25 @@
     // Validate & disable pane on load
     jQuery(document).ready(function () {
       Office.context.mailbox.getCallbackTokenAsync(function (result) {
-        var validationStatus = $(".js-search-status").empty();
-
         if (result.status !== "succeeded") {
           printError(validationStatus, "Error happened (access token was not issued), try again or contact it@metz.dk");
           return;
         }
-
+    
         const ewsItemId = Office.context.mailbox.item.itemId;
         const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
         const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
         const emailAddress = Office.context.mailbox.userProfile.emailAddress;
-
-        const user = isFromSharedFolder
-          ? Office.context.mailbox.item.getSharedPropertiesAsync((result) => result.value.targetMailbox)
-          : "me";
-
-        validateMemo(itemId, user, emailAddress);
+    
+        if (isFromSharedFolder) {
+          Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
+            validateMemo(itemId, result.value.targetMailbox, emailAddress);
+          });
+        } else {
+          validateMemo(itemId, "me", emailAddress);
+        }
       });
-
+    
       function validateMemo(itemId, user, emailAddress) {
         const endpoint = "https://api.metz.dk/journalize/v1/validate";
         const data = {
@@ -44,10 +44,16 @@
           data,
           (res) => {
             validationStatus.empty();
-            if (!res.valid) {
+            if (res.valid) {
+              validationStatus.append('<p class="color-green">' + (res.message || "Validation succeeded") + '</p>');
+            } else {
               validationStatus.append('<p class="color-red">' + (res.message || "Validation error") + '</p>');
               disablePaneControls();
             }
+          },
+          () => {
+            printError(validationStatus, "Validation request failed. Check your connection.");
+            disablePaneControls();
           }
         );
       }
@@ -62,7 +68,7 @@
           if (xhttp.status != 200) {
             errorCallback();
           } else {
-            successCallback(JSON.parse(this.responseText));
+            successCallback(JSON.parse(this.responseText || "{}"));
           }
         };
 
