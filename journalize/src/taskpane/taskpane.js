@@ -100,7 +100,7 @@
         e.preventDefault();
 
         let action = document.querySelector('#action').value;
-        let keyword = document.getElementById("keyword").value;
+        let keyword = document.getElementById("MyKeyword").value;
         let recentControl = document.getElementById("recent");
         let recent = recentControl.checked ? "1" : "0";
 
