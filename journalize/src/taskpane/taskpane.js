@@ -13,11 +13,11 @@
       const validationStatus = $(".js-search-status").empty();
     
       Office.context.mailbox.getCallbackTokenAsync(function (result) {
-        if (result.status !== "succeeded") {
-          printError(validationStatus, "Error happened (access token was not issued), try again or contact it@metz.dk");
+        if (result.status !== Office.AsyncResultStatus.Succeeded) {
+          printError(validationStatus, result.error.message + " - Error (9001) (Try again or contact it@metz.dk)");
           return;
         }
-    
+
         const ewsItemId = Office.context.mailbox.item.itemId;
         const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
         const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
@@ -183,8 +183,8 @@
         outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
-          if (result.status !== "succeeded") {
-            printError(outputEl, "Error happened (accesss token was not issued), try again or contact it@metz.dk");
+          if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            printError(outputEl, result.error.message + " - Error (9002) (Try again or contact it@metz.dk)");
             return;
           }
           
