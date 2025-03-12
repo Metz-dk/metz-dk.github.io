@@ -14,7 +14,8 @@
     
       Office.context.mailbox.getCallbackTokenAsync(function (result) {
         if (result.status !== Office.AsyncResultStatus.Succeeded) {
-          printError(validationStatus, result.error.message + " - Error (9001) (Try again or contact it@metz.dk)");
+          const errorMessage = result.error ? result.error.message : "Unknown error";
+          printError(validationStatus, errorMessage + " - Error (9001) (Try again or contact it@metz.dk)");
           return;
         }
 
@@ -184,7 +185,8 @@
 
         Office.context.mailbox.getCallbackTokenAsync(function(result) {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            printError(outputEl, result.error.message + " - Error (9002) (Try again or contact it@metz.dk)");
+            const errorMessage = result.error ? result.error.message : "Unknown error";
+            printError(outputEl, errorMessage + " - Error (9002) (Try again or contact it@metz.dk)");
             return;
           }
           
