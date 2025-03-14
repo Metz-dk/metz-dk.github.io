@@ -33,7 +33,7 @@
       getCallbackTokenWithRetry(function (result) {
         if (result.status !== Office.AsyncResultStatus.Succeeded) {
           const errorMessage = result.error ? result.error.message : "Unknown error";
-          console.log("Token error details:", result.error); // Log full error object
+          console.log("result", result); // Log full error object
           printError(validationStatus, errorMessage + " - Error (9001) (Try again or contact it@metz.dk)");
           return;
         }
@@ -205,7 +205,7 @@
         getCallbackTokenWithRetry(function(result) {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             const errorMessage = result.error ? result.error.message : "Unknown error";
-            console.log("Token error details:", result.error); // Log full error object
+            console.log("result", result); // Log full error object
             printError(outputEl, errorMessage + " - Error (9002) (Try again or contact it@metz.dk)");
             return;
           }
