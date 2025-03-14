@@ -8,11 +8,30 @@
 (function(){
   'use strict';
 
+  // Cache for the callback token
+  let cachedToken = null;
+
+  // Optimized token retrieval function with caching
+  function getCallbackTokenWithRetry(callback) {
+    // First check if we have a cached token
+    if (cachedToken) {
+      callback({ status: Office.AsyncResultStatus.Succeeded, value: cachedToken });
+      return;
+    }
+    
+    Office.context.mailbox.getCallbackTokenAsync(function(result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
+        cachedToken = result.value;
+      }
+      callback(result);
+    });
+  }
+
   Office.initialize = function(reason){
     jQuery(document).ready(function () {
       const validationStatus = $(".js-search-status").empty();
     
-      Office.context.mailbox.getCallbackTokenAsync(function (result) {
+      getCallbackTokenWithRetry(function (result) {
         if (result.status !== Office.AsyncResultStatus.Succeeded) {
           const errorMessage = result.error ? result.error.message : "Unknown error";
           console.log("Token error details:", result.error); // Log full error object
@@ -184,7 +203,7 @@
         var outputEl = $(".js-search-result");
         outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
 
-        Office.context.mailbox.getCallbackTokenAsync(function(result) {
+        getCallbackTokenWithRetry(function(result) {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             const errorMessage = result.error ? result.error.message : "Unknown error";
             console.log("Token error details:", result.error); // Log full error object
@@ -230,7 +249,7 @@
               if (xhttp.status != 200) { // analyze HTTP status of the response
                 printError(outputEl);
               } else { // show the result
-                var res  = JSON.parse(this.responseText);
+                var res = JSON.parse(this.responseText);
                 if (res.status===1) {
                   confirmLink(outputEl, res);
                 }
