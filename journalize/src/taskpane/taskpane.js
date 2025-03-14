@@ -19,11 +19,11 @@
       return;
     }
     
-Office.context.mailbox.getCallbackTokenAsync(function(result) {
-  // Cache the entire result object
-  cachedResult = result;
-  callback(result);
-});
+    Office.context.mailbox.getCallbackTokenAsync(function(result) {
+      // Cache the entire result object
+      cachedResult = result;
+      callback(result);
+    });
   }
 
   Office.initialize = function(reason){
