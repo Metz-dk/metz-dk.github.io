@@ -19,7 +19,7 @@
       return;
     }
     
-    Office.context.mailbox.getCallbackTokenAsync(function(result) {
+    Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
       // Cache the entire result object
       cachedResult = result;
       callback(result);
