@@ -8,21 +8,20 @@
 (function(){
   'use strict';
 
-  // Cache for the callback token
-  let cachedToken = null;
+  // Cache for the full result object
+  let cachedResult = null;
 
   // Optimized token retrieval function with caching
   function getCallbackTokenWithRetry(callback) {
-    // First check if we have a cached token
-    if (cachedToken) {
-      callback({ status: Office.AsyncResultStatus.Succeeded, value: cachedToken });
+    // If we have a cached result, use it regardless of status
+    if (cachedResult) {
+      callback(cachedResult);
       return;
     }
     
     Office.context.mailbox.getCallbackTokenAsync(function(result) {
-      if (result.status === Office.AsyncResultStatus.Succeeded) {
-        cachedToken = result.value;
-      }
+      // Cache the entire result object
+      cachedResult = result;
       callback(result);
     });
   }
