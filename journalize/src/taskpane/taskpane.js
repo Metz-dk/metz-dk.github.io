@@ -26,14 +26,64 @@
     });
   }
 
-  Office.initialize = function(reason){
-    jQuery(document).ready(function () {
-      const validationStatus = $(".js-search-status").empty();
+  // Improved sendRequest function using fetch with timeout
+  function sendRequest(endpoint, data, options = {}) {
+    const { method = 'POST', timeout = 30000 } = options;
     
-      getCallbackTokenWithRetry(function (result) {
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    
+    const fetchOptions = {
+      method,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      signal: controller.signal
+    };
+    
+    // Add body for POST requests
+    if (method === 'POST' && data) {
+      fetchOptions.body = JSON.stringify(data);
+    }
+    
+    // For GET requests with data, append to URL
+    let url = endpoint;
+    if (method === 'GET' && data) {
+      const params = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        params.append(key, value);
+      });
+      url = `${endpoint}?${params.toString()}`;
+    }
+    
+    return fetch(url, fetchOptions)
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .catch(error => {
+        clearTimeout(timeoutId);
+        // If it's a timeout, provide a clearer error
+        if (error.name === 'AbortError') {
+          throw new Error('Request timed out');
+        }
+        throw error;
+      });
+  }
+
+  Office.initialize = function(reason){
+    document.addEventListener('DOMContentLoaded', function() {
+      const validationStatus = document.querySelector(".js-search-status");
+      if (validationStatus) validationStatus.textContent = '';
+    
+      getCallbackTokenWithRetry(function(result) {
         if (result.status !== Office.AsyncResultStatus.Succeeded) {
           const errorMessage = result.error ? result.error.message : "Unknown error";
-          console.log("Token error details:", result.error); // Log full error object
+          console.log("Token error details:", result.error);
           printError(validationStatus, errorMessage + " - Error (9001) (Try again or contact it@metz.dk)");
           return;
         }
@@ -44,7 +94,11 @@
         const emailAddress = Office.context.mailbox.userProfile.emailAddress;
     
         if (isFromSharedFolder) {
-          Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
+          Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
+            if (result.status !== Office.AsyncResultStatus.Succeeded) {
+              printError(validationStatus, "Failed to get shared properties - Error (9003) (Try again or contact it@metz.dk)");
+              return;
+            }
             validateMemo(itemId, result.value.targetMailbox, emailAddress, validationStatus);
           });
         } else {
@@ -60,153 +114,167 @@
           emailAddress: emailAddress,
         };
     
-        sendRequest(
-          endpoint,
-          data,
-          validationStatus,
-          (res) => {
-            validationStatus.empty();
+        sendRequest(endpoint, data)
+          .then(res => {
+            if (validationStatus) validationStatus.textContent = '';
             togglePaneControls(!res.valid);
             if (!res.valid) {
               printError(validationStatus, (res.message || "Validation error"));
             }
-          },
-          () => {
+          })
+          .catch(error => {
+            console.error("Validation request failed:", error);
             togglePaneControls(false);
-          }
-        );
-      }
-    
-      function sendRequest(endpoint, data, validationStatus, successCallback, errorCallback) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", endpoint, true);
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send(JSON.stringify(data));
-    
-        xhttp.onload = function () {
-          if (xhttp.status != 200) {
-            errorCallback();
-          } else {
-            successCallback(JSON.parse(this.responseText || "{}"));
-          }
-        };
-    
-        xhttp.onerror = errorCallback;
+            printError(validationStatus, "Request failed: " + error.message);
+          });
       }
     
       function togglePaneControls(flag) {
-        $("form[name='search']").find("input, select, button").prop("disabled", flag);
+        const formElements = document.querySelectorAll("form[name='search'] input, form[name='search'] select, form[name='search'] button");
+        formElements.forEach(element => {
+          element.disabled = flag;
+        });
       }
     });
 
     // search
-    jQuery(document).ready(function(){
-      $("form[name='search'] select").focus();
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectElement = document.querySelector("form[name='search'] select");
+      if (selectElement) selectElement.focus();
 
       // When user changes the action selection
-      $("form[name='search'] select").on('change', function() {
-        let action = $('#action').val();
-        let approvalContainer = $('.js-approval');
-  
+      document.querySelector("form[name='search'] select")?.addEventListener('change', function() {
+        const action = document.getElementById('action')?.value;
+        const approvalContainer = document.querySelector('.js-approval');
+        
+        if (!approvalContainer) return;
+        
         const flag = action === 'order-open' || action === 'order-closed' || action === 'order-rma';
-        approvalContainer.toggle(flag);
+        approvalContainer.style.display = flag ? 'block' : 'none';
 
         // Reset the approval checkbox
-        $('#approval').prop('checked', false);
+        const approvalCheckbox = document.getElementById('approval');
+        if (approvalCheckbox) approvalCheckbox.checked = false;
       });
 
       // When user press on search button
-      $("form[name='search']").on('submit', function(e){
+      document.querySelector("form[name='search']")?.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        let action = document.querySelector('#action').value;
-        let keyword = document.getElementById("SearchQuery").value;
-        let recentControl = document.getElementById("recent");
-        let recent = recentControl.checked ? "1" : "0";
+        const action = document.querySelector('#action')?.value;
+        const keyword = document.getElementById("SearchQuery")?.value;
+        const recentControl = document.getElementById("recent");
+        const recent = recentControl?.checked ? "1" : "0";
 
-        var requestUrl = 'https://api.metz.dk/journalize/v1/search?action=' + action + '&keyword=' + encodeURI(keyword) + '&recent=' + recent;
-        var searchSection = $(".js-search-section").hide();
-        var searchResult = $(".js-search-result").empty();
-        var searchStatus = $(".js-search-status").empty();
-        searchStatus.append('<p class="color-blue">... please wait...</p>');
+        if (!action || !keyword) return;
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", requestUrl, true);
-        xhttp.send();
+        const searchData = { action, keyword, recent };
+        const searchSection = document.querySelector(".js-search-section");
+        const searchResult = document.querySelector(".js-search-result");
+        const searchStatus = document.querySelector(".js-search-status");
         
-        xhttp.onload = function() {
-          searchStatus.empty();
-          if (xhttp.status != 200) { // analyze HTTP status of the response
-            printError(searchStatus);
-          } else { // show the result
-            var res = JSON.parse(this.responseText);
-            if (res.status===1) {
-              searchSection.show();
+        if (searchSection) searchSection.style.display = 'none';
+        if (searchResult) searchResult.textContent = '';
+        if (searchStatus) {
+          searchStatus.textContent = '';
+          const waitMessage = document.createElement('p');
+          waitMessage.className = 'color-blue';
+          waitMessage.textContent = '... please wait...';
+          searchStatus.appendChild(waitMessage);
+        }
+
+        sendRequest('https://api.metz.dk/journalize/v1/search', searchData, { method: 'GET' })
+          .then(res => {
+            if (searchStatus) searchStatus.textContent = '';
+            
+            if (res.status === 1) {
+              if (searchSection) searchSection.style.display = 'block';
               buildSearchResult(searchResult, res);
-            }
-            else {
+            } else {
               printError(searchStatus, res.message);
             }
-          }
-        };
-
-        xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-          printError(searchStatus);
-        };
+          })
+          .catch(error => {
+            console.error("Search request failed:", error);
+            printError(searchStatus, "Search failed: " + error.message);
+          });
 
         function buildSearchResult(parent, data) {
-          parent.empty();
-          let action = data.action;
-          let docs = data.docs;
+          if (!parent) return;
+          
+          parent.textContent = '';
+          const action = data.action;
+          const docs = data.docs;
       
           if (docs.length > 0) {
-            $("<p>").addClass("color-green").text(docs.length+" document(s) displayed (total: "+data.total+")").appendTo(parent);
-            let list = $("<ul>").addClass("my-3").appendTo(parent);
-            for (var i = 0; i < docs.length; i++) {
-              let li = $("<li>").appendTo(list);
-              $("<input>")
-              .attr('type', 'checkbox')
-              .attr('name', 'doc')
-              .attr('id', "doc"+docs[i].unid)
-              .val(docs[i].unid)
-              .appendTo(li);
-              li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
+            const statusP = document.createElement('p');
+            statusP.className = 'color-green';
+            statusP.textContent = docs.length + " document(s) displayed (total: " + data.total + ")";
+            parent.appendChild(statusP);
+            
+            const list = document.createElement('ul');
+            list.className = 'my-3';
+            parent.appendChild(list);
+            
+            for (let i = 0; i < docs.length; i++) {
+              const li = document.createElement('li');
+              list.appendChild(li);
+              
+              const input = document.createElement('input');
+              input.type = 'checkbox';
+              input.name = 'doc';
+              input.id = "doc" + docs[i].unid;
+              input.value = docs[i].unid;
+              li.appendChild(input);
+              
+              const label = document.createElement('label');
+              label.className = 'ml-1';
+              label.htmlFor = "doc" + docs[i].unid;
+              label.textContent = docs[i].title;
+              li.appendChild(label);
             }
-          }
-          else {
-            $("<p>").addClass("color-green").text("No documents found").appendTo(parent);
+          } else {
+            const noDocsP = document.createElement('p');
+            noDocsP.className = 'color-green';
+            noDocsP.textContent = "No documents found";
+            parent.appendChild(noDocsP);
           }
         }
       });
     });
 
     // search-result submission
-    jQuery(document).ready(function(){
+    document.addEventListener('DOMContentLoaded', function() {
       // When user press on search button
-      $("form[name='search-result'").on('submit', function(e){
+      document.querySelector("form[name='search-result']")?.addEventListener('submit', function(e) {
         e.preventDefault();
 
         // quit if none selected
-        var docChecked = $("input[type=checkbox][name='doc']:checked");
+        const docChecked = document.querySelectorAll("input[type=checkbox][name='doc']:checked");
         if (docChecked.length === 0) return;
 
-        let approvalControl = document.getElementById("approval");
-        let approval = approvalControl.checked;
+        const approvalControl = document.getElementById("approval");
+        const approval = approvalControl?.checked;
 
         // get all selected values
-        var docs = [];
-        docChecked.each(function(){
-          docs.push($(this).val());
-        });
+        const docs = Array.from(docChecked).map(checkbox => checkbox.value);
 
-        var outputEl = $(".js-search-result");
-        outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
+        const outputEl = document.querySelector(".js-search-result");
+        if (outputEl) {
+          outputEl.textContent = '';
+          const waitMessage = document.createElement('p');
+          waitMessage.className = 'color-blue';
+          waitMessage.textContent = '... sending data (please wait) ...';
+          outputEl.appendChild(waitMessage);
+        }
 
         getCallbackTokenWithRetry(function(result) {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             const errorMessage = result.error ? result.error.message : "Unknown error";
-            console.log("Token error details:", result.error); // Log full error object
+            console.log("Token error details:", result.error);
             printError(outputEl, errorMessage + " - Error (9002) (Try again or contact it@metz.dk)");
+            // If we get an error, clear the cache so next attempt gets a fresh token
+            cachedResult = null;
             return;
           }
           
@@ -218,6 +286,10 @@
           // shared folder
           if (isFromSharedFolder) {
             Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
+              if (result.status !== Office.AsyncResultStatus.Succeeded) {
+                printError(outputEl, "Failed to get shared properties - Error (9004) (Try again or contact it@metz.dk)");
+                return;
+              }
               const user = result.value.targetMailbox; 
               linkMemo(itemId, docs, user, emailAddress);
             });
@@ -237,38 +309,49 @@
               "approval": approval
             };
       
-            var app = $("#app-journalize #action option:selected").val();
-            var endpoint = "https://api.metz.dk/journalize/v1/" + app;
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", endpoint, true);
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send(JSON.stringify(json));
-      
-            xhttp.onload = function() {
-              if (xhttp.status != 200) { // analyze HTTP status of the response
-                printError(outputEl);
-              } else { // show the result
-                var res = JSON.parse(this.responseText);
-                if (res.status===1) {
+            const actionSelect = document.querySelector("#app-journalize #action");
+            const app = actionSelect ? actionSelect.value : '';
+            if (!app) {
+              printError(outputEl, "Failed to determine action");
+              return;
+            }
+            
+            const endpoint = "https://api.metz.dk/journalize/v1/" + app;
+            
+            sendRequest(endpoint, json)
+              .then(res => {
+                if (res.status === 1) {
                   confirmLink(outputEl, res);
+                } else {
+                  printError(outputEl, res.message || "Unknown error");
                 }
-                else {
-                  printError(outputEl, res.message);
-                }
-              }
-            };
-      
-            xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-              printError(outputEl);
-            };
+              })
+              .catch(error => {
+                console.error("Journalize request failed:", error);
+                printError(outputEl, "Request failed: " + error.message);
+              });
           
             function confirmLink(parent, data) {
-              parent.empty();
-              parent.append('<p class="color-green">Mail journalized succesfully</p>');
+              if (!parent) return;
+              
+              parent.textContent = '';
+              
+              const successP = document.createElement('p');
+              successP.className = 'color-green';
+              successP.textContent = 'Mail journalized successfully';
+              parent.appendChild(successP);
 
-              $.each(data.docs, function(index, value) {
-                parent.append('<p><a href="'+value.url+'" target="_blank">'+value.title+'</a></p>');
-              });
+              if (data.docs && Array.isArray(data.docs)) {
+                data.docs.forEach(doc => {
+                  const linkP = document.createElement('p');
+                  const link = document.createElement('a');
+                  link.href = doc.url;
+                  link.target = '_blank';
+                  link.textContent = doc.title;
+                  linkP.appendChild(link);
+                  parent.appendChild(linkP);
+                });
+              }
             }
           }
         });
@@ -276,13 +359,15 @@
     });
 
     function printError(el, message) {
-      el.empty();
+      if (!el) return;
+      
+      el.textContent = '';
       message = message || "Error happened, try again or contact it@metz.dk";
-      $("<p>")
-      .addClass("color-red")
-      .text(message).appendTo(el);
+      
+      const errorP = document.createElement('p');
+      errorP.className = 'color-red';
+      errorP.textContent = message;
+      el.appendChild(errorP);
     }
-
   };
-
 })();
