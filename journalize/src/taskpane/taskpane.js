@@ -5,53 +5,26 @@
 
 /* global document, Office */
 
-(function(){
+(function () {
   'use strict';
 
-  // Cache for the full result object
-  let cachedResult = null;
-
-  // Optimized token retrieval function with caching
-  function getCallbackTokenWithRetry(callback) {
-    // If we have a cached result, use it regardless of status
-    if (cachedResult) {
-      callback(cachedResult);
-      return;
-    }
-    
-    Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function(result) {
-      // Cache the entire result object
-      cachedResult = result;
-      callback(result);
-    });
-  }
-
-  Office.initialize = function(reason){
+  Office.initialize = function (reason) {
     jQuery(document).ready(function () {
       const validationStatus = $(".js-search-status").empty();
-    
-      getCallbackTokenWithRetry(function (result) {
-        if (result.status !== Office.AsyncResultStatus.Succeeded) {
-          const errorMessage = result.error ? result.error.message : "Unknown error";
-          console.log("result", result); // Log full error object
-          printError(validationStatus, errorMessage + " - Error (9001) (Try again or contact it@metz.dk)");
-          return;
-        }
 
-        const ewsItemId = Office.context.mailbox.item.itemId;
-        const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
-        const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
-        const emailAddress = Office.context.mailbox.userProfile.emailAddress;
-    
-        if (isFromSharedFolder) {
-          Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
-            validateMemo(itemId, result.value.targetMailbox, emailAddress, validationStatus);
-          });
-        } else {
-          validateMemo(itemId, "me", emailAddress, validationStatus);
-        }
-      });
-    
+      const ewsItemId = Office.context.mailbox.item.itemId;
+      const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
+      const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
+      const emailAddress = Office.context.mailbox.userProfile.emailAddress;
+
+      if (isFromSharedFolder) {
+        Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
+          validateMemo(itemId, result.value.targetMailbox, emailAddress, validationStatus);
+        });
+      } else {
+        validateMemo(itemId, "me", emailAddress, validationStatus);
+      }
+
       function validateMemo(itemId, user, emailAddress, validationStatus) {
         const endpoint = "https://api.metz.dk/journalize/v1/validate";
         const data = {
@@ -59,7 +32,7 @@
           user: user,
           emailAddress: emailAddress,
         };
-    
+
         sendRequest(
           endpoint,
           data,
@@ -76,13 +49,13 @@
           }
         );
       }
-    
+
       function sendRequest(endpoint, data, validationStatus, successCallback, errorCallback) {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", endpoint, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify(data));
-    
+
         xhttp.onload = function () {
           if (xhttp.status != 200) {
             errorCallback();
@@ -90,24 +63,24 @@
             successCallback(JSON.parse(this.responseText || "{}"));
           }
         };
-    
+
         xhttp.onerror = errorCallback;
       }
-    
+
       function togglePaneControls(flag) {
         $("form[name='search']").find("input, select, button").prop("disabled", flag);
       }
     });
 
     // search
-    jQuery(document).ready(function(){
+    jQuery(document).ready(function () {
       $("form[name='search'] select").focus();
 
       // When user changes the action selection
-      $("form[name='search'] select").on('change', function() {
+      $("form[name='search'] select").on('change', function () {
         let action = $('#action').val();
         let approvalContainer = $('.js-approval');
-  
+
         const flag = action === 'order-open' || action === 'order-closed' || action === 'order-rma';
         approvalContainer.toggle(flag);
 
@@ -116,7 +89,7 @@
       });
 
       // When user press on search button
-      $("form[name='search']").on('submit', function(e){
+      $("form[name='search']").on('submit', function (e) {
         e.preventDefault();
 
         let action = document.querySelector('#action').value;
@@ -133,14 +106,14 @@
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", requestUrl, true);
         xhttp.send();
-        
-        xhttp.onload = function() {
+
+        xhttp.onload = function () {
           searchStatus.empty();
           if (xhttp.status != 200) { // analyze HTTP status of the response
             printError(searchStatus);
           } else { // show the result
             var res = JSON.parse(this.responseText);
-            if (res.status===1) {
+            if (res.status === 1) {
               searchSection.show();
               buildSearchResult(searchResult, res);
             }
@@ -150,7 +123,7 @@
           }
         };
 
-        xhttp.onerror = function() { // only triggers if the request couldn't be made at all
+        xhttp.onerror = function () { // only triggers if the request couldn't be made at all
           printError(searchStatus);
         };
 
@@ -158,19 +131,19 @@
           parent.empty();
           let action = data.action;
           let docs = data.docs;
-      
+
           if (docs.length > 0) {
-            $("<p>").addClass("color-green").text(docs.length+" document(s) displayed (total: "+data.total+")").appendTo(parent);
+            $("<p>").addClass("color-green").text(docs.length + " document(s) displayed (total: " + data.total + ")").appendTo(parent);
             let list = $("<ul>").addClass("my-3").appendTo(parent);
             for (var i = 0; i < docs.length; i++) {
               let li = $("<li>").appendTo(list);
               $("<input>")
-              .attr('type', 'checkbox')
-              .attr('name', 'doc')
-              .attr('id', "doc"+docs[i].unid)
-              .val(docs[i].unid)
-              .appendTo(li);
-              li.append('<label class="ml-1" for="doc'+docs[i].unid+'">'+docs[i].title+'</label>');
+                .attr('type', 'checkbox')
+                .attr('name', 'doc')
+                .attr('id', "doc" + docs[i].unid)
+                .val(docs[i].unid)
+                .appendTo(li);
+              li.append('<label class="ml-1" for="doc' + docs[i].unid + '">' + docs[i].title + '</label>');
             }
           }
           else {
@@ -181,9 +154,9 @@
     });
 
     // search-result submission
-    jQuery(document).ready(function(){
+    jQuery(document).ready(function () {
       // When user press on search button
-      $("form[name='search-result'").on('submit', function(e){
+      $("form[name='search-result'").on('submit', function (e) {
         e.preventDefault();
 
         // quit if none selected
@@ -195,83 +168,74 @@
 
         // get all selected values
         var docs = [];
-        docChecked.each(function(){
+        docChecked.each(function () {
           docs.push($(this).val());
         });
 
         var outputEl = $(".js-search-result");
         outputEl.html("<p class='color-blue'>... sending data (please wait) ...</p>");
 
-        getCallbackTokenWithRetry(function(result) {
-          if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            const errorMessage = result.error ? result.error.message : "Unknown error";
-            console.log("result", result); // Log full error object
-            printError(outputEl, errorMessage + " - Error (9002) (Try again or contact it@metz.dk)");
-            return;
-          }
-          
-          const ewsItemId = Office.context.mailbox.item.itemId;
-          const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
-          const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
-          const emailAddress = Office.context.mailbox.userProfile.emailAddress;
+        const ewsItemId = Office.context.mailbox.item.itemId;
+        const itemId = Office.context.mailbox.convertToRestId(ewsItemId, Office.MailboxEnums.RestVersion.v2_0);
+        const isFromSharedFolder = Office.context.mailbox.initialData.isFromSharedFolder;
+        const emailAddress = Office.context.mailbox.userProfile.emailAddress;
 
-          // shared folder
-          if (isFromSharedFolder) {
-            Office.context.mailbox.item.getSharedPropertiesAsync(function(result) {
-              const user = result.value.targetMailbox; 
-              linkMemo(itemId, docs, user, emailAddress);
+        // shared folder
+        if (isFromSharedFolder) {
+          Office.context.mailbox.item.getSharedPropertiesAsync(function (result) {
+            const user = result.value.targetMailbox;
+            linkMemo(itemId, docs, user, emailAddress);
+          });
+        }
+        // private email
+        else {
+          const user = "me";
+          linkMemo(itemId, docs, user, emailAddress);
+        }
+
+        function linkMemo(itemId, docs, user, emailAddress) {
+          const json = {
+            "itemid": itemId,
+            "docs": docs,
+            "user": user,
+            "emailAddress": emailAddress,
+            "approval": approval
+          };
+
+          var app = $("#app-journalize #action option:selected").val();
+          var endpoint = "https://api.metz.dk/journalize/v1/" + app;
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", endpoint, true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(JSON.stringify(json));
+
+          xhttp.onload = function () {
+            if (xhttp.status != 200) { // analyze HTTP status of the response
+              printError(outputEl);
+            } else { // show the result
+              var res = JSON.parse(this.responseText);
+              if (res.status === 1) {
+                confirmLink(outputEl, res);
+              }
+              else {
+                printError(outputEl, res.message);
+              }
+            }
+          };
+
+          xhttp.onerror = function () { // only triggers if the request couldn't be made at all
+            printError(outputEl);
+          };
+
+          function confirmLink(parent, data) {
+            parent.empty();
+            parent.append('<p class="color-green">Mail journalized succesfully</p>');
+
+            $.each(data.docs, function (index, value) {
+              parent.append('<p><a href="' + value.url + '" target="_blank">' + value.title + '</a></p>');
             });
           }
-          // private email
-          else {
-            const user = "me"; 
-            linkMemo(itemId, docs, user, emailAddress);
-          }
-
-          function linkMemo(itemId, docs, user, emailAddress) {
-            const json = {
-              "itemid": itemId,
-              "docs": docs,
-              "user": user,
-              "emailAddress": emailAddress,
-              "approval": approval
-            };
-      
-            var app = $("#app-journalize #action option:selected").val();
-            var endpoint = "https://api.metz.dk/journalize/v1/" + app;
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", endpoint, true);
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send(JSON.stringify(json));
-      
-            xhttp.onload = function() {
-              if (xhttp.status != 200) { // analyze HTTP status of the response
-                printError(outputEl);
-              } else { // show the result
-                var res = JSON.parse(this.responseText);
-                if (res.status===1) {
-                  confirmLink(outputEl, res);
-                }
-                else {
-                  printError(outputEl, res.message);
-                }
-              }
-            };
-      
-            xhttp.onerror = function() { // only triggers if the request couldn't be made at all
-              printError(outputEl);
-            };
-          
-            function confirmLink(parent, data) {
-              parent.empty();
-              parent.append('<p class="color-green">Mail journalized succesfully</p>');
-
-              $.each(data.docs, function(index, value) {
-                parent.append('<p><a href="'+value.url+'" target="_blank">'+value.title+'</a></p>');
-              });
-            }
-          }
-        });
+        }
       });
     });
 
@@ -279,8 +243,8 @@
       el.empty();
       message = message || "Error happened, try again or contact it@metz.dk";
       $("<p>")
-      .addClass("color-red")
-      .text(message).appendTo(el);
+        .addClass("color-red")
+        .text(message).appendTo(el);
     }
 
   };
